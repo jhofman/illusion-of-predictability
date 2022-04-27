@@ -1,0 +1,11 @@
+o
+	var html = '';	
+html = html.replace(/COUNTRYN/g, f_country[country_train]);
+	html = html.replace(/COUNTRYADJ/g, adj_country[country_train]);
+
+	$('#train_list').append(html)
+
+	ts_read_start = getDateTime();
+
+	// enable tooltips
+	$('[data-toggle="tooltip"]').tooltip();

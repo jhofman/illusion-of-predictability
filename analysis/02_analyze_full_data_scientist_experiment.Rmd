@@ -1,0 +1,273 @@
+---
+title: "The illusion of predictability in common scientific visualizations, data scientists"
+date: "`r Sys.Date()`"
+always_allow_html: true
+output:
+  html_document:
+    code_folding: hide
+    fig_height: 5
+    fig_width: 6
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+---
+
+```{r datascience-setup, include=FALSE}
+library(here)
+library(scales)
+library(patchwork)
+library(broom)
+library(broom.mixed)
+library(tidyverse)
+library(lme4)
+
+here::i_am("analysis/02_analyze_full_data_scientist_experiment.Rmd")
+set.seed(810)
+
+source(here("analysis/shared_analysis.R"))
+
+if (!dir.exists('figures'))
+  dir.create('figures')
+
+if (!dir.exists('results'))
+  dir.create('results')
+
+theme_set(theme_bw())
+
+experiment = "datascientists"
+```
+
+
+# Loading data
+
+We have four datasets:
+* `-tidy-background.csv` contains the background information for each participant.
+* `-tidy-psup-game.csv` contains information on each trial of the psup game.
+* `-tidy-editorial.csv` contains the last trial for which we have data on each participant, and the corresponding editorial data thus far
+* `-tidy-elapsed.csv` contains the timing data for each stage and trial
+
+## Background questions
+
+As preregistered, we drop people who do not answer yes to any of the background questions or meet the other inclusion criteria. How many people would we drop?
+
+```{r}
+background_ds <- read_ds_bg()
+
+assignments_to_drop1 = background_ds %>% 
+  filter((has_any_stats_training == 0) || (rctComfort == 1)) %>%
+  select(assignmentId)
+
+background_with_number_done <- background_ds %>% 
+  rename(is_phd=has_phd) %>%  # the has_ variables are part of the "past activities" question, except for has_phd
+  select(assignmentId, starts_with("has_")) %>% 
+  mutate(across(starts_with("has_"), as.logical)) %>%
+  mutate(across(starts_with("has_"), as.integer)) %>%
+  rowwise() %>%
+  mutate(number_done = sum(across(starts_with("has_"))))
+
+bg.rct <- ggplot(background_ds, aes(x=rctComfort)) +
+  geom_bar() +
+  xlab("Comfort with RCTs")
+
+bg.yrs.experience <- background_ds %>%
+  mutate(yearsExperience=recode_factor(yearsExperience,
+                                       "Less than 1 year"="< 1",
+                                       "1-2 years"="1-2",
+                                       "3-5 years"="3-5",
+                                       "6-10 years"="6-10",
+                                       "11-20 years"="11-20",
+                                       "20+ years"="20+")) %>%
+  ggplot(aes(x=yearsExperience)) +
+  xlab("Years of experience") +
+  geom_bar()
+
+bg.number.done <- ggplot(background_with_number_done, aes(x=number_done)) +
+  xlab("Categories with prior experience") +
+  geom_bar()
+
+bg.rct / bg.yrs.experience / bg.number.done
+
+ggsave(here(paste("analysis/figures/", experiment, "-background.pdf", sep="")), width=4, height=6)
+
+bg.rct + bg.yrs.experience + bg.number.done +
+  plot_annotation(title = "Background of data science participants")
+
+ggsave(here(paste("analysis/figures/", experiment, "-background-wide.pdf", sep="")), width=10, height=3)
+
+assignments_to_drop = c(
+  background_with_number_done %>%
+    filter(number_done == 0) %>% select(assignmentId),
+  assignments_to_drop1)
+
+background_numbers = list()
+background_numbers["total"] = nrow(background_ds)
+background_numbers["num_dropped"] = length(assignments_to_drop)
+background_cols = c("has_phd", "has_conducted_rct", "has_published", "has_took_course", "has_analyzed_data", "has_used_stats_software")
+for (col in background_cols) {
+  background_numbers[col] = sum(as.logical(background_ds[[col]]))
+}
+
+assignments_to_drop
+```
+
+
+## Trial and editorial data
+
+### Statistical tests
+
+```{r}
+attach(read_ds_data(background_ds))
+ds_editorial_test_results <- editorial_tests(datascientist_editorial_data)
+attach(ds_editorial_test_results)
+
+ds_editorial_test_results
+```
+
+### Editorial judgments
+```{r}
+editorial_plot <- plot_editorial_data(datascientist_editorial_data)
+
+editorial_plot
+```
+
+```{r}
+ggsave(paste("figures/", experiment, "_editorial_responses_histograms_overlayed.pdf", sep=""), width=7, height=3)
+```
+
+### Probability of superiority judgment for paper
+
+```{r}
+editorial_psup_figure <- plot_editorial_psup(datascientist_editorial_data)
+
+editorial_psup_figure
+```
+
+```{r}
+ggsave(paste("./figures/", experiment, "_estimated_psup.pdf", sep=""), width=4, height=4)
+```
+
+### Perceived error bars
+
+What did people think they saw?
+
+```{r}
+plot_whatYouSaw_q1(datascientist_editorial_data)
+```
+
+```{r}
+ggsave(paste("./figures/", experiment, "_recalled_q1.pdf", sep=""), width=4, height=4)
+```
+
+```{r}
+plot_whatYouSaw_q2(datascientist_editorial_data)
+```
+
+```{r}
+ggsave(paste("./figures/", experiment, "_recalled_q2.pdf", sep=""), width=4, height=4)
+
+datascience_recalled_q1_env <- recalled_tests_q1(datascientist_editorial_data)
+datascience_recalled_q1_env
+```
+
+```{r}
+datascience_recalled_q2_env <- recalled_tests(datascientist_editorial_data)
+datascience_recalled_q2_env
+```
+
+### Mediation of overall effect by perceived error bars
+
+If we include the understanding of the error bars as a covariate, can we explain the main effect of condition on the perceived probability of superiority?
+
+```{r}
+plot_accuracy_vs_recalled(datascientist_editorial_data)
+```
+```{r}
+ggsave(paste("./figures/", experiment, "_recalled_q2_vs_psup.pdf", sep=""), width=6, height=4)
+```
+
+```{r}
+paper_psup_ds <- datascientist_editorial_data %>% filter(!is.na(paperA_superiorityEstimate))
+mod.supestimate.mediation <- lm(paperA_superiorityEstimate ~ relevel(as.factor(paperA_whatYouSaw2), ref="recalled_uncert_pop") + condition, paper_psup_ds)
+summary(mod.supestimate.mediation)
+```
+It appears that correctly identifying the bars as representing uncertainty in the average makes a large difference for participants who saw SEs only (but much less of a difference than simply seeing points). Moreover, for participants who saw SE + points, there is not much difference in what they thought the error bars meant.
+
+This suggests that even correct understanding of the error bars leads to biased effect size judgments when only shown inferential uncertainty, and that estimates based off displays using SEs + points are more robust to misunderstandings of the inferential statistics.
+
+Mediation of editorial judgment by perceived probability of superiority:
+```{r}
+mod.editorial.mediation.ds <- lm(q_overall ~ paperA_superiorityEstimate + condition, paper_psup_ds)
+summary(mod.editorial.mediation.ds)
+```
+```{r}
+mod.editorial.mediation.bg.ds <- fit_psup_vs_overall_emm_datascientists(background_ds, datascientist_editorial_data)
+datascience_mediation_psup_coef <- tidy(coeftest(mod.editorial.mediation.bg.ds, vcov. = vcovCL)) %>% 
+  filter(term == "paperA_superiorityEstimate")
+datascience_mediation_psup_coef
+```
+```{r}
+plot_psup_vs_overall_emm(mod.editorial.mediation.bg.ds, datascientist_editorial_data) +
+  geom_vline(xintercept=58, linetype="dashed") +
+  geom_text(data=data.frame(x=58.5, y=4.6, text="True psup (58)"), aes(x=x,y=y,label=text), alpha=0.5, hjust="left", vjust="bottom") 
+```
+
+# Part II: Analyses of the psup game
+## True psup vs. signed error
+
+This is Part II of the experiment, and here we are examining how the guessed probability of superiority varies based on the true probability of superiority.
+
+```{r}
+plot_psup_game(datascientist_trials)
+```
+
+```{r}
+ggsave(paste("./figures/", experiment, "_psup_game.pdf", sep=""), width=4, height=4)
+```
+
+```{r}
+datascience_test_results <- psup_game_tests(datascientist_trials)
+das_trials_extreme_means = datascience_test_results$trials_extreme_means
+das_trials_extreme_t_stats = datascience_test_results$trials_extreme_t_stats
+das_trials_lmer_coef = datascience_test_results$trials_lmer_coef
+attach(datascience_test_results)
+
+datascience_test_results
+```
+
+
+# Saving .Rdata for rtex document
+
+```{r}
+das_sample_t_stats = sample_t_stats
+das_appeal_t_stats = appeal_t_stats
+das_overall_t_stats = overall_t_stats
+das_editorial_psup_summaries = editorial_psup_summaries
+das_paper_psup_t_stats = paper_psup_t_stats
+das_paper_psup_extreme_props = paper_psup_extreme_props
+das_paper_psup_extreme_t_stats = paper_psup_extreme_t_stats
+
+datascience_recalled_q1 <- datascience_recalled_q1_env$whatYouSaw
+datascience_recalled_q2_means <- datascience_recalled_q2_env$recalled_avg_means
+datascience_recalled_q2_t_stats <- datascience_recalled_q2_env$recalled_avg_t_stats
+datascience_recalled_q1_one_SE <-  datascience_recalled_q1 %>%
+  filter(paperA_whatYouSaw == "1 SE")
+datascience_recalled_q1_SEvsSD <- datascience_recalled_q1_env$whatYouSaw_SEvsSD %>% filter(whatYouSaw == "SE")
+
+save(
+  background_numbers,
+  das_sample_t_stats, das_overall_t_stats, das_appeal_t_stats,
+  das_paper_psup_t_stats, das_trials_lmer_coef,
+  das_trials_extreme_means, das_trials_extreme_t_stats,
+  das_paper_psup_extreme_props, das_paper_psup_extreme_t_stats,
+  das_editorial_psup_summaries,
+  datascience_recalled_q1_one_SE, datascience_recalled_q2_means,
+  datascience_recalled_q1_SEvsSD, datascience_recalled_q2_t_stats,
+  datascience_mediation_psup_coef,
+  file="results/das_results.Rdata")
+```
+
+# Part III: Free response feedback
+
+```{r free-response-feedback}
+show_feedback(experiment)
+```

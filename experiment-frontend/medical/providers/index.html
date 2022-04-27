@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+	<title>Medical decision making</title>
+
+	<link href="../css/jquery-ui.min.css" rel="stylesheet" type="text/css">
+	<link href="../css/bootstrap-slider.min.css" rel="stylesheet" type="text/css">
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="../css/bootstrap.min.css">
+
+	<link rel="stylesheet" href="../css/blockrain.css">
+	<!-- Custom styles for this template -->
+	<link href="../css/starter-template.css" rel="stylesheet">
+	<!-- <script type="text/javascript" src="js/d3.v3.min.js"></script> -->
+
+	<link href="../css/style.css" rel="stylesheet" type="text/css">
+
+	<link rel="stylesheet" href="../css/distributionbuilder.css">
+
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/blockrain.jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../js/purl.js"></script>
+	<script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="../js/sortable.min.js"></script>
+	<script>$.fn.slider = null</script>
+	<script type="text/javascript" src="../js/bootstrap-slider.min.js"></script>
+
+	<script src="../js/distributionbuilder.ie11.js"></script>
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<link rel="stylesheet" href="../css/flat-light/jquery-ui-1.10.4.custom.min.css" />
+
+	<script src="../js/medical-providers.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(main);
+	</script>
+
+</head>
+
+<body>
+	<div class="container">
+				<div id="consent" class="col-sm-offset-1 col-sm-10" style="padding-top: 0px">
+
+			<h1 style="text-align: center"> Introduction </h1>
+			<div class="row">
+				<p>
+					We are conducting a brief research survey (Geisinger IRB # 2018-0449) on Geisinger clinicians’ judgments about
+					research and evidence in medicine. You will be asked to read about a hypothetical research study and answer
+					questions about it.
+				<p>This survey is completely anonymous and should take less than 10 minutes to complete.</p>
+				
+				<p>
+					Your voluntary participation will contribute to our scientific understanding of how clinicians think about evidence
+					in
+					medicine, which will in turn improve how research is communicated to clinicians and maximize the impact of clinical
+					research on patient care.
+				</p>
+
+				<p id="using_ie" style="color: red; display: none">
+					It looks like you're using an unsupported browser such as Internet Explorer. Please copy and paste this link into a different browser to continue.
+				</p>	
+			</div>
+
+			<form id=consent_form action="javascript:submit_consent();" style="display: none;">
+				<div class="form-group row">
+					<div class="checkbox">
+						
+							<p>
+								<b>If you agree to participate, please click the button below. If you don't, please close this window.</b>
+							</p>
+							<label>
+								<input type=checkbox id=consent_checkbox name=consent_checkbox value="">I agree to this
+								consent form</label>
+
+							<br/><br/>
+							<p>
+								<b>Have you previously completed or tried to complete any version of this study?</b>
+							</p>
+							<div class="radio">
+								<label><input type="radio" name="previously_attempted" value=1 required=true>Yes</label>
+							</div>
+							<div class="radio">
+								<label><input type="radio" name="previously_attempted" value=0 required=true>No</label>
+							</div>
+							<div id="previously_attempted_error"></div>
+					
+					</div>
+				</div>
+				<div class="form-group row">
+					<center>
+						<input type=submit id=submit_consent value=Continue class="btn btn-default" />
+					</center>
+				</div>
+			</form>
+
+		</div>
+
+		<div id="first_scenario" class="col-sm-12" style="padding-top:0px; display: none">
+			<div class="blood_pressure">
+				<center>
+					<h1>
+						Blood pressure in high risk patients
+					</h1>
+				</center>
+				<p>
+					Recent studies have shown that lowering systolic blood pressure below 120mm Hg reduces the
+					occurrence of
+					adverse cardiovascular events in high risk patients.
+				</p>
+				<p>
+					On the next screen we are going to show you information about a hypothetical new medication designed
+					to
+					<b>lower</b> blood pressure in high risk patients and ask you some questions about it.
+				</p>
+			</div>
+
+			<div class="covid_19">
+				<center>
+					<h1>
+						A hypothetical treatment for hospitalized COVID-19 patients
+					</h1>
+				</center>
+				<p>
+					There are many candidate treatments being explored for patients who are hospitalized with COVID-19.
+				</p>
+				<p>
+					On the next screen we are going to show you information about a hypothetical new treatment for
+					COVID-19 designed to <b>reduce</b> time to recovery for patients hospitalized with COVID-19 and ask
+					you some questions about it.
+				</p>
+			</div>
+
+			<form id=first_scenario_form action="javascript:submit_first_scenario();">
+				<div class="form-group row">
+					<div class="checkbox">
+						<center>
+							<label>
+								<input type=checkbox id=first_scenario_checkbox name=first_scenario_checkbox value="">
+								<b>Click here to confirm you understand the scenario</b></label>
+						</center>
+					</div>
+				</div>
+				<div class="form-group row">
+					<center>
+						<input type=submit id=submit_first_scenario value=Continue class="btn btn-default" />
+					</center>
+				</div>
+			</form>
+		</div>
+
+		<div id="rct" class="col-sm-12" style="padding-top: 0px; display: none">
+			<div id="statistics" class="col-sm-8" style="padding-top: 0px">
+				<h1>
+					Results of a hypothetical randomized controlled trial
+				</h1>
+
+				<div class="blood_pressure">
+					<p>
+						Suppose that there is a new medication designed to <b>lower</b> blood pressure in high-risk
+						patients,
+						and
+						that it has been tested in a double-blind, randomized controlled trial restricted to patients
+						with
+						high systolic blood pressure.
+					</p>
+					<p>
+						Each patient's systolic blood pressure was measured by a physician in a pre-treatment
+						examination,
+						and if patients qualified for the trial they were randomly assigned to either a control or
+						treatment
+						group. <b>In the pre-treatment phase, participants in both groups had an average systolic blood
+							pressure of 130mm Hg. There were 150 patients in each of the treatment and control
+							groups.</b>
+					</p>
+					<p>
+						The control group received a placebo and the treatment group received the new medication.
+						Several
+						months later, each patient's systolic blood pressure was again measured by a physician in a
+						post-treatment examination.
+					</p>
+					<p>
+						<b>Here is a summary of the results of the trial, which are depicted in the figure to the
+							right:</b>
+					</p>
+					<ul>
+						<li>Participants in the control group had an average post-treatment systolic blood pressure of
+							130mm
+							Hg</li>
+						<li>Participants in the treatment group had an average post-treatment systolic blood pressure of
+							120mm Hg</li>
+					</ul>
+				</div>
+
+				<div class="covid_19">
+					<p>
+						Suppose that there is a new medication designed to <b>reduce</b> time to recovery for patients
+						hospitalized with COVID-19,
+						and that it has been tested in a double-blind, randomized controlled trial.
+					</p>
+					<p>
+						In the trial, patients admitted to the hospital for COVID-19 were randomly assigned to either a
+						control or
+						treatment
+						group. The control group received a placebo and the treatment group received the new medication.
+						The
+						primary outcome was the time to recovery (defined as discharge from the hospital). <b>There were
+							150 patients in each of the treatment and control groups.</b>
+					</p>
+
+					<p>
+						<b>Here is a summary of the results of the trial, which are depicted in the figure to the
+							right:</b>
+					</p>
+					<ul>
+						<li>Participants in the control group had an average time to recovery of 13 days</li>
+						<li>Participants in the treatment group had a average time to recovery of 9 days</li>
+					</ul>
+				</div>
+
+				<p>
+					Outcomes were approximately normally distributed in both groups before and after the treatment,
+					with roughly equal percentages of patients falling above and below the
+					average. <span id="error_bar_description"></span>
+				</p>
+			</div>
+
+			<div id="graph" class="col-sm-4" style="padding-top: 0px">
+			</div>
+
+			<div id="superiority" class="col-sm-12" style="padding-top: 0px">
+				<h1>Your estimate</h1>
+
+				<form class="form-inline" id="superiority_form" action="javascript:submit_superiority()">
+
+					<div class="blood_pressure">
+						What is your best estimate of the probability that, after the experiment, a randomly selected
+						patient in
+						the treatment group had a <b>lower</b> systolic blood pressure than a randomly selected patient
+						in the
+						control
+						group? (A 50% probability would indicate no difference in outcomes between the treatment and
+						control
+						groups.)
+					</div>
+
+					<div class="covid_19">
+						What is your best estimate of the probability that a randomly selected patient in the treatment
+						group recovered more quickly than a randomly selected patient in the control group? (A 50%
+						probability would indicate no difference in outcomes between the treatment and
+						control
+						groups.)
+					</div>
+
+					<center>
+						<input type="text" class="form-control mb-1 mr-sm-2 mb-sm-0" id="superiority_estimate"
+							name="superiority_estimate" autocomplete="off"> %
+					</center>
+					<div id="special_error" class="error-message"></div>
+					<br/>
+					<center>
+						<input type=submit id=submit_superiority value=Submit class="btn btn-default" />
+					</center>
+				</form>
+			</div>
+
+
+			<div id="cost" class="col-sm-12" style="padding-top: 0px">
+				<h1>Another estimate</h1>
+
+				<form class="form-inline" id="cost_form" action="javascript:submit_cost()">
+					<span class="blood_pressure">
+						<b>Based on its effectiveness and the price of other medications, how much do you think a 30 day
+							supply of this new medication would be worth to patients with high blood pressure?</b> For
+						reference, a 30 day supply of generic <!-- angiotensin-converting enzyme (ACE) --> ACE inhibitors, also used to
+						lower blood pressure, costs about $20.
+					</span>
+					<span class="covid_19">
+						<b>Based on its effectiveness and the price of other medications, how much do you think a 5 day
+							supply of this new medication would be worth to patients hospitalized with COVID-19?</b> For
+						reference, a 5 day supply of the most popular drug used for this purpose costs about $2500.
+					</span>
+
+					<center>
+						$ <input type="text" class="form-control mb-1 mr-sm-2 mb-sm-0" id="cost_estimate"
+							name="cost_estimate" autocomplete="off">
+					</center>
+					<div id="cost_error" class="error-message"></div>
+					<br/>
+					<center>
+						<input type=submit id=submit_cost value=Submit class="btn btn-default" />
+					</center>
+				</form>
+			</div>
+
+		</div>
+
+		<div id="what_you_saw" class="col-sm-12" style="padding-top: 0px; display: none">
+			<h1>A question about data from the previous page</h1>
+
+			<form id="what_you_saw_form" action="javascript:submit_what_you_saw()">
+				<p>
+					What kind of error bars were shown in the plot on the previous page?
+				</p>
+
+				<div id="recalled-se-wrapper" class="radio">
+					<label><input type="radio" name="what_you_saw_radio" value="recalled_se">Standard errors, showing
+						uncertainty in estimating the average in each condition</label>
+				</div>
+				<div id="recalled-sd-wrapper" class="radio">
+					<label><input type="radio" name="what_you_saw_radio" value="recalled_sd">Standard deviations,
+						showing the variation in individual outcomes in each condition</label>
+				</div>
+
+				<div id="what_you_saw_error" class="col-sm-12 error-message"></div>
+				<br/>
+				<center>
+					<input type=submit id=submit_what_you_saw value=Submit class="btn btn-default" />
+				</center>
+			</form>
+		</div>
+
+
+		<div id="distbuilder" class="col-sm-12" style="padding-top: 0px; display: none">
+			<form class="form-inline" id="distbuilder_form" action="javascript:submit_distbuilder()"
+				onSubmit="return validate_distbuilder()">
+				<h1>A Closer Look</h1>
+				<div id="distbuilder-standard-wrapper">
+					<h3>Your expectations for the control condition <font color="red">(the placebo)</font>
+					</h3>
+
+					<div class="blood_pressure">
+						If you were to treat 100 patients <b class="standard-color">using <font color="red">the placebo
+							</font> described in the
+							randomized controlled trial you just read about</b>, how many patients do you think would
+						have a
+						post-treatment systolic blood pressure in each range?
+						<span class="distbuilder_mean">Recall that the average post-treatment systolic blood pressure
+							with
+							the placebo (the control condition) was 130mm Hg. </span>
+					</div>
+
+					<div class="covid_19">
+						If you were to treat 100 patients <b class="standard-color">using <font color="red">the placebo
+							</font> described in the
+							randomized controlled trial you just read about</b>, how many days do you think it would
+						take each patient to recover?
+						<span class="distbuilder_mean">Recall that the average time to recovery
+							with
+							the placebo (the control condition) was 13 days. </span>
+					</div>
+
+					<div style="padding:24px">
+						<span class="blood_pressure">
+							<i>Please use the +/- buttons to show how many patients you think you would see in each
+								systolic
+								blood pressure range. You can hold your mouse button down to quickly add or subtract patients.</i> <br />
+						</span>
+
+						<span class="covid_19">
+							<i>Please use the +/- buttons to show how many patients you think would recover in
+								each day range. You can hold your mouse button down to quickly add or subtract patients.</i> <br />
+						</span>
+
+						<div id="distbuilder-standard"></div>
+
+						<center>
+							<div id="standard-numleft">You have 100 patients left to place.</div>
+						</center>
+						<center>
+							<div id="distbuilder-standard-error" class="error-message"> </div>
+						</center>
+					</div>
+				</div>
+				<div id="distbuilder-special-wrapper">
+					<h3>Your expectations for the treatment condition <font color="blue">(the new medication)</font>
+					</h3>
+
+					<div class="blood_pressure">
+						If you were to treat 100 patients <b class="standard-color">using <font color="blue">the new
+								medication</font> described in
+							the
+							randomized controlled trial you just read about</b>, how many patients do you think would
+						have a
+						post-treatment systolic blood pressure in each range?
+						<span class="distbuilder_mean">Recall that the average post-treatment systolic blood pressure
+							with
+							the new medication (the treatment condition) was 120mm Hg. </span>
+					</div>
+
+					<div class="covid_19">
+						If you were to treat 100 patients <b class="standard-color">using <font color="blue">the new
+								medication</font> described in
+							the
+							randomized controlled trial you just read about</b>, how many days do you think it would
+						take each patient to recover?
+						<span class="distbuilder_mean">Recall that the average time to recovery
+							with
+							the new medication (the treatment condition) was 9 days. </span>
+					</div>
+
+					<div style="padding:24px">
+						<span class="blood_pressure">
+							<i>Please use the +/- buttons to show how many patients you think you would see in each
+								systolic
+								blood pressure range. You can hold your mouse button down to quickly add or subtract patients.</i> <br />
+						</span>
+
+						<span class="covid_19">
+							<i>Please use the +/- buttons to show how many patients you think would recover in
+								each day range. You can hold your mouse button down to quickly add or subtract patients.</i> <br />
+						</span>
+
+						<div id="distbuilder-special"></div>
+
+						<center>
+							<div id="special-numleft">You have 100 patients left to place.</div>
+						</center>
+						<center>
+							<div id="distbuilder-special-error" class="error-message"> </div>
+						</center>
+					</div>
+				</div>
+				<center>
+					<input type=submit id=submit_distbuilder value=Submit class="btn btn-default" />
+				</center>
+			</form>
+		</div>
+
+
+		<!-- TODO: change wording if they get the other scenario first -->
+		<div id="second_scenario" class="col-sm-12" style="padding-top:0px; display: none">
+			<center>
+				<h1>
+					A second scenario
+				</h1>
+			</center>
+			<p class="blood_pressure">
+				On the next screen we are going to show you another scenario about a hypothetical new medication
+				designed to <b>lower</b> blood pressure in high risk patients and ask you some questions about it.
+			</p>
+			<p class="covid_19">
+				On the next screen we are going to show you another scenario about a hypothetical new treatment for
+				COVID-19 designed
+				to <b>reduce</b> time to recovery and ask you some questions about it.
+			</p>
+			<p>
+				Whereas <b>in the previous scenario the error bars showed two <span style="font-style: italic;"
+						id="first_condition_bars">standard errors</span></b> above and below the average in
+				each group, <b>in the next scenario the error bars show two <span style="font-style: italic;"
+						id="second_condition_bars">standard deviations</span></b> above and below the average in each
+				group.
+			</p>
+
+			<form id=second_scenario_form action="javascript:submit_second_scenario();">
+				<div class="form-group row">
+					<div class="checkbox">
+						<center>
+							<label>
+								<input type=checkbox id=second_scenario_checkbox name=second_scenario_checkbox value="">
+								<b>Click here to confirm you understand that the type of error bars will change</b></label>
+						</center>
+					</div>
+				</div>
+				<div class="form-group row">
+					<center>
+						<input type=submit id=submit_second_scenario value=Continue class="btn btn-default" />
+					</center>
+				</div>
+			</form>
+		</div>
+
+		<div id="free_response" class="col-sm-12" style="padding-top: 0px; display: none">
+			<center>
+				<h1>Your thoughts</h1>
+
+				<form id="free_response_form" action="javascript:submit_free_response();">
+					<div class="col-sm-12" style="padding: 12px">
+						<!--Is there anything about this study that you found confusing? <br />-->
+						<!-- <label for="feedback">Please leave feedback or comments below.</label> -->
+						<label for="feedback">Please explain in a few sentences how you thought about the estimates you
+							made in this study.</label>
+						<textarea class="form-control" id="feedback" rows="5" name="feedback"></textarea>
+					</div>
+					<div class="form-group row">
+						<input type=submit id=free_response_submit value="Continue" class="btn btn-default" />
+					</div>
+				</form>
+			</center>
+		</div>
+
+		<div id="background_survey" class="col-sm-12" style="padding-top: 0px; display: none">
+
+			<form id="background_survey_form" action="javascript:submit_background_survey()">
+				<h1>A few final questions about you and your experience</h1>
+
+				<!-- Stats training -->
+				<p><b>
+					1. What sources of formal or informal training or education have you had in research, research methods, or statistics? Select all that apply.
+				</b></p>
+				<div class="checkbox">
+					<label><input type="checkbox" name="stats_training_checkbox" value="undergrad">Undergraduate coursework</label>
+				</div>
+				<div class="checkbox">
+					<label><input type="checkbox" name="stats_training_checkbox" value="professional">Professional school instruction (e.g., during your MD, DO, NP, or PA program)</label>
+				</div>
+				<div class="checkbox">
+					<label><input type="checkbox" name="stats_training_checkbox" value="postgraduate">Postgraduate coursework (e.g., during internship, residency, fellowship, etc...)</label>
+				</div>
+				<div class="checkbox">
+					<label><input type="checkbox" name="stats_training_checkbox" value="cme">CME or or other continuing education courses</label>
+				</div>
+				<div class="checkbox">
+					<label><input type="checkbox" name="stats_training_checkbox" value="self">Self-instruction via textbooks or peer-reviewed literature</label>
+				</div>
+				<div class="checkbox">
+					<label><input type="checkbox" name="stats_training_checkbox" value="other">Other</label>
+				</div>
+				<div class="checkbox">
+					<label><input type="checkbox" name="stats_training_checkbox" value="none">None of the above</label>
+				</div>
+
+				<br/>
+
+				<!-- Comfort -->
+				<p><b>
+					2. How comfortable are you with understanding the results of randomized controlled trials, including reading graphs and plots?
+				</b></p>
+				<div class="radio">
+					<label><input type="radio" name="comfort_with_rcts_radio" value="1">Not at all</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="comfort_with_rcts_radio" value="2">Somewhat</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="comfort_with_rcts_radio" value="3">Moderately</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="comfort_with_rcts_radio" value="4">Very</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="comfort_with_rcts_radio" value="5">Extremely</label>
+				</div>
+
+				<br/>
+
+				<!-- All past activities -->
+				<p><b>
+					3. Have you ever done any of the following? Select all that apply.
+				</b></p>
+				<!--
+				<div class="checkbox">
+					<label><input type="checkbox" name="all_past_activities_checkbox" value="changed_based_on_evidence">Changed what you typically prescribe or recommend based on new evidence or guidelines</label>
+				</div>
+				-->
+				<div class="checkbox">
+					<label><input type="checkbox" name="all_past_activities_checkbox" value="read_rct" id="all_past_activities_checkbox_read_rct">Read the results of a randomized controlled trial in a peer-reviewed journal article</label>
+				</div>
+				<div id="read_rct_years_wrapper" style="margin-left: 30px; display: none">
+					When was the last time you did this (enter 0 if done within the last year)?
+					&nbsp;
+					<input id="read_rct_years" type="number" class="years" maxlength="2" size="2" min="0" max="99"></input>
+					&nbsp; years
+				</div>
+
+				<div class="checkbox">
+					<label><input type="checkbox" name="all_past_activities_checkbox" value="changed_based_on_rct" id="all_past_activities_checkbox_changed_based_on_rct">Changed what you typically prescribed or recommend after personally reading the results of a randomized controlled trial in a peer-reviewed journal article</label>
+				</div>
+				<div id="changed_based_on_rct_years_wrapper" style="margin-left: 30px; display: none">
+					When was the last time you did this (enter 0 if done within the last year)?
+					&nbsp;
+					<input id="changed_based_on_rct_years" type="number" class="years" maxlength="2" size="2" min="0" max="99"></input>
+					&nbsp; years
+				</div>
+
+				<div class="checkbox">
+					<label><input type="checkbox" name="all_past_activities_checkbox" value="published" id="all_past_activities_checkbox_published">Published a scientific paper in a peer-reviewed journal</label>
+				</div>
+				<div id="published_years_wrapper" style="margin-left: 30px; display: none">
+					When was the last time you did this (enter 0 if done within the last year)?
+					&nbsp;
+					<input id="published_years" type="number" class="years" maxlength="2" size="2" min="0" max="99"></input>
+					&nbsp; years
+				</div>
+
+				<div class="checkbox">
+					<label><input type="checkbox" name="all_past_activities_checkbox" value="conducted_rct" id="all_past_activities_checkbox_conducted_rct">Conducted or worked on a team conducting a randomized controlled trial</label>
+				</div>
+				<div id="conducted_rct_years_wrapper" style="margin-left: 30px; display: none">
+					When was the last time you did this (enter 0 if done within the last year)?
+					&nbsp;
+					<input id="conducted_rct_years" type="number" class="years" maxlength="2" size="2" min="0" max="99"></input>
+					&nbsp; years
+				</div>
+
+				<div class="checkbox">
+					<label><input type="checkbox" name="all_past_activities_checkbox" value="took_course" id="all_past_activities_checkbox_took_course">Took a course or class in statistics, biostatistics, or research methods (online, in-person, CME, etc.)</label>
+				</div>
+				<div id="took_course_years_wrapper" style="margin-left: 30px; display: none">
+					When was the last time you did this (enter 0 if done within the last year)?
+					&nbsp;
+					<input id="took_course_years" type="number" class="years" maxlength="2" size="2" min="0" max="99"></input>
+					&nbsp; years
+				</div>
+				
+				<div class="checkbox">
+					<label><input type="checkbox" name="all_past_activities_checkbox" value="analyzed_data" id="all_past_activities_checkbox_analyzed_data">Analyzed data for statistical significance outside of a course requirement</label>
+				</div>
+				<div id="analyzed_data_years_wrapper" style="margin-left: 30px; display: none">
+					When was the last time you did this (enter 0 if done within the last year)?
+					&nbsp;
+					<input id="analyzed_data_years" type="number" class="years" maxlength="2" size="2" min="0" max="99"></input>
+					&nbsp; years
+				</div>
+
+				<!--
+				<div class="checkbox">
+					<label><input type="checkbox" name="all_past_activities_checkbox" value="took_a_course">Took a course or class of any kind on statistics, research, or data science (online, in-person, CME, etc...)</label>
+				</div>
+				-->
+				
+				<div class="checkbox">
+					<label><input type="checkbox" name="all_past_activities_checkbox" value="used_stats_software" id="all_past_activities_checkbox_used_stats_software">Used SPSS, R, Python, Stata, SAS, or any other statistical software</label>
+				</div>
+				<div id="used_stats_software_years_wrapper" style="margin-left: 30px; display: none">
+					When was the last time you did this (enter 0 if done within the last year)?
+					&nbsp;
+					<input id="used_stats_software_years" type="number" class="years" maxlength="2" size="2" min="0" max="99"></input>
+					&nbsp; years
+				</div>
+
+				<div class="checkbox">
+					<label><input type="checkbox" name="all_past_activities_checkbox" value="none">None of the above</label>
+				</div>
+
+				<br/>
+
+				<!-- Current research -->
+				<p><b>
+					4. Are you currently involved in research?
+				</b></p>
+				<div class="radio">
+					<label><input type="radio" name="current_research_radio" value="1">Yes</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="current_research_radio" value="0">No</label>
+				</div>
+
+				<br/>
+
+				<!-- Position -->
+				<p><b>
+					5. Please select the option that best describes you below.
+				</b></p>
+				<div class="radio">
+					<label><input type="radio" name="position_radio" value="doctor">Doctor (MD or DO)</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="position_radio" value="physician_assistant">Physician Assistant</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="position_radio" value="nurse_practitioner">Nurse Practitioner</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="position_radio" value="staff">Non-prescribing clinician or staff without clinical credential</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="position_radio" value="other">Other</label>
+				</div>
+
+				<br/>
+
+				<!-- Years of experience -->
+				<p><b>
+					6. How long have you been working in the medical field?
+				</b></p>
+				<div class="radio">
+					<label><input type="radio" name="years_experience_radio" value="Less than 1 year">Less than 1 year</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="years_experience_radio" value="1-2 years">1-2 years</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="years_experience_radio" value="3-5 years">3-5 years</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="years_experience_radio" value="6-10 years">6-10 years</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="years_experience_radio" value="11-20 years">11-20 years</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="years_experience_radio" value="21-30 years">21-30 years</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="years_experience_radio" value="30+ years">30+ years</label>
+				</div>
+
+				<br/>
+
+				<!-- Email -->
+				<!--
+				<p><b>
+					8. If you'd like to be entered in the lottery to win a gift certificate, please supply an email address that we can reach you at:
+				</b></p>
+				<div class="row">
+					<div class="col-sm-4">
+						<input type="email" class="form-control" id="email" placeholder="name@domain.com">
+					</div>
+				</div>
+				
+				<br/>
+				-->
+
+				<!-- <div id="stats_training_error" class="col-sm-12 error-message"></div> -->
+				<center>
+					<input type=submit id=submit_background_survey value=Submit class="btn btn-default" />
+				</center>
+			</form>
+		</div>
+
+		<div id="done" class="col-sm-12" style="padding-top: 0px; display: none">
+			<center>
+				<p>
+				<h3 id="final_thanks">Thanks, just a moment while we record all of your responses ...</h3>
+				</p>
+				<div id="spinning_ring" class="lds-ring">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			</center>
+		</div>
+</body>
+
+</html>
+

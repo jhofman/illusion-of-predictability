@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study: Interpreting statistical results</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@1.1.0-alpha/dist/css/materialize.min.css" type="text/css">
+    <link rel="stylesheet" href="dist/prob.css" type="text/css">
+</head>
+<body>
+    <div id="container" class="container">
+        <h2 id="submitting">Submitting results...
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </h2>
+        <div id="submitsuccess">Success! Your study has concluded.</div>
+        <div id="submitfailure">
+            Error. Your results have somehow failed to submit. Please email decisionresearchlab@outlook.com referencing
+            the following information and we will look into the issue:
+            <div id="errorBlock" class="card-panel">
+            Participant Id: <div id="workerIdError"></div>
+            <br />
+            Survey id: <div id="taskIdError"></div>
+            <br />
+            Error: <div id="turkSubmitError"></div>
+            </div>
+        </div>
+		<div id="first_scenario" class="col-sm-12" style="padding-top:0px">
+			<div>
+                <h1 class="center-align">
+                    Interpreting statistical results
+                </h1>
+				<p>
+					On the next page we're going to show you an extended abstract for a paper. Please read it as if you were an editor for a scientific journal, deciding on whether to accept the paper. After you read the abstract we'll ask you a few questions. 
+				</p>
+				<div style="background-color:yellow; margin-bottom: 0.5em;">
+					Note: If you complete this study, we will donate a set of personal protective equipment (PPE) for a UN refugee health worker.
+				</div>
+			</div>
+
+			<form id="first_scenario_form">
+				<div class="form-group row">
+					<div class="checkbox">
+							<label>
+								<input type=checkbox id="confirm_not_done_before_checkbox" name="confirm_not_done_before_checkbox" value="" required>
+								<span>Click here to confirm you have not completed this study before.</span>
+                            </label>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="checkbox">
+							<label>
+                                <div id="first_scenario_error" class="error-message" style="display: none">Please confirm you understand the scenario to proceed.</div>
+								<input type=checkbox id="first_scenario_checkbox" name="first_scenario_checkbox" value="">
+								<span>Click here to confirm you understand the scenario</span>
+                            </label>
+					</div>
+				</div>
+				<div class="form-group row">
+					<center>
+						<input type=submit id=submit_first_scenario value=Continue class="btn btn-default" />
+					</center>
+				</div>
+			</form>
+		</div>
+
+		<div id="rct" class="col-sm-12" style="padding-top: 0px; display: none">
+            <div class="row">
+            <h3>
+                Extended abstract: <br />Video games and aggressive behavior in the laboratory
+            </h3>
+
+			<div style="background-color:yellow; margin-bottom: 0.5em;">
+				Note: We know this looks long, but this is the only reading in the study. The rest of the pages are very short.
+			</div>
+            <div id="statistics" class="col s12 m8" style="padding-top: 0px">
+            
+                <div>
+                    <p>
+                        Entertainment media affects our lives. What behaviors children and adults consider appropriate comes, in part, from the lessons learned from television and the movies. Here we use a randomized control trial in a laboratory setting to test the impact of playing violent video games on aggressive behavior. We recruited a sample of 800 undergraduates from a large Midwestern introductory psychology course to participate in a lab experiment where their aggression was assessed after playing a violent or non-violent single player video game.
+                    </p>
+                    <p>
+						Participants were randomly assigned to treatment (violent game) or control (non-violent game) conditions, with 400 participants in each condition. After playing the game for a total of 90 minutes they were placed in unrelated situations where they could anonymously be more or less aggressive towards another person. Our main finding is that participants who played violent video games behaved more aggressively (M = 6.81, SD = 0.51) compared to those who played non-violent video games (M = 6.65, SD = 0.53), t(798) = 4.35, p &lt; .001 (Fig. 1).
+                    </p>
+                    <p>
+                        Specifically, after playing the game participants were told that someone occupying a neighboring cubicle would compete with them to press a button first in response to a stimulus, and the loser would be subjected to a noise blast, though the neighboring cubicle was in fact empty, and the participant won or lost rounds at random. The intensity and duration of the noise blast was set by the participant ahead of time. When they won, they heard the noise blast in the neighboring cubicle. When they lost, they were subjected to a noise blast of a random intensity and length. We measured their aggressiveness by the length of the noise blast that participants chose to deliver to their opponent when they won the reaction time task.
+                    </p>
+                    <p>
+                        In the short term, playing a violent video game appears to affect aggression by priming aggressive thoughts. If repeated exposure to violent video games does indeed lead to the creation and heightened accessibility of a variety of aggressive knowledge structures, the consequent changes in everyday social interactions may also lead to consistent increases in aggressive affect.
+                    </p>
+                </div>
+            </div>
+            
+            <div id="graph_container" class="col s12 m4" style="padding-top: 0px">
+                <div id="graph">
+                    <img src="dist/videogame_points.png" class="abstract_fig" id="fig_videogame_points" style="display: none" />
+                    <img src="dist/videogame_se.png" class="abstract_fig" id="fig_videogame_se" style="display: none" />
+                </div>
+Figure 1. Participants who played violent video games had a higher aggressiveness score (as measured by the length of noise blasts they delivered to their opponents, in log milliseconds) compared to those who played non-violent video games. Error bars show 1 standard error above and below the mean for each condition. <span id="extra_points_caption" style="display: none">Colored points show all of the individual responses in each condition.</span>
+            </div>
+
+            </div>
+			<div id="editorial-questions" class="col s12" style="padding-top: 0px">
+				<h5>Please evaluate this extended abstract to the best of your ability on the following dimensions.</h5>
+
+				<form class="form-inline" id="editorial_questions_form">
+
+					<div id="q_appeal_error" class="error-message" style="display: none">This question is required.</div>
+					<div>
+						Appeal of this work to a broad interdisciplinary audience:
+					</div>
+<div><label for="q_appeal_1"><input type="radio" id="q_appeal_1" name="q_appeal" value="1"> <span>1 (Not at all appealing)</span></label></div>
+<div><label for="q_appeal_2"><input type="radio" id="q_appeal_2" name="q_appeal" value="2"> <span>2</span></label></div>
+<div><label for="q_appeal_3"><input type="radio" id="q_appeal_3" name="q_appeal" value="3"> <span>3</span></label></div>
+<div><label for="q_appeal_4"><input type="radio" id="q_appeal_4" name="q_appeal" value="4"> <span>4</span></label></div>
+<div><label for="q_appeal_5"><input type="radio" id="q_appeal_5" name="q_appeal" value="5"> <span>5 (Very appealing)</span></label></div>
+
+<p>
+					<div id="q_sample_size_error" class="error-message" style="display: none">This question is required.</div>
+					<div>
+						How sufficient is the experiment's sample size?
+					</div>
+<div><label for="q_sample_size_1"><input type="radio" id="q_sample_size_1" name="q_sample_size" value="1"><span>1 (Completely insufficient)</span></label></div>
+<div><label for="q_sample_size_2"><input type="radio" id="q_sample_size_2" name="q_sample_size" value="2"><span>2</span></label></div>
+<div><label for="q_sample_size_3"><input type="radio" id="q_sample_size_3" name="q_sample_size" value="3"><span>3</span></label></div>
+<div><label for="q_sample_size_4"><input type="radio" id="q_sample_size_4" name="q_sample_size" value="4"><span>4</span></label></div>
+<div><label for="q_sample_size_5"><input type="radio" id="q_sample_size_5" name="q_sample_size" value="5"><span>5 (Completely sufficient)</span></label></div>
+</p>
+
+<p>
+					<div id="q_overall_error" class="error-message" style="display: none">This question is required.</div>
+					<div>
+						Overall recommendation of abstract for publication:
+					</div>
+<div><label for="q_overall_1"><input type="radio" id="q_overall_1" name="q_overall" value="1"> <span>1 (Strong accept)</span></label></div>
+<div><label for="q_overall_2"><input type="radio" id="q_overall_2" name="q_overall" value="2"> <span>2 (Accept)</span></label></div>
+<div><label for="q_overall_3"><input type="radio" id="q_overall_3" name="q_overall" value="3"> <span>3 (Possible reject)</span></label></div>
+<div><label for="q_overall_4"><input type="radio" id="q_overall_4" name="q_overall" value="4"> <span>4 (Reject)</span></label></div>
+<div><label for="q_overall_5"><input type="radio" id="q_overall_5" name="q_overall" value="5"> <span>5 (Strong reject)</span></label></div>
+</p>
+			<div class="center-align">
+				<input type=submit id=submit_editorial_questions value=Submit class="btn btn-default" />
+            </div>
+				</form>
+			</div>
+
+			<div id="superiority" class="col-sm-12" style="padding-top: 0px">
+				<h5>Please answer the following question to the best of your ability</h5>
+
+				<form class="form-inline" id="superiority_form">
+
+					<div>
+                        <p>
+                        What is the probability that a randomly selected member of the treatment group (someone who played a violent video game) had a higher aggressiveness score than a randomly selected member of a control group (someone who played a non-violent video game)?
+                        </p>
+                        <p>
+                        (A 50% probability indicates no difference in outcomes between the treatment and control groups, on average.)
+                        </p>
+					</div>
+
+                    <div class="center-align">
+                        <div>
+                        <input type="number" class="psup-guess" min=50 max=100 id="paper_a_superiority_estimate"
+                            name="paper_a_superiority_estimate" autocomplete="off" placeholder="50-100 (%)" required>
+                        </div>
+                        <div>
+                        <input type=submit id=submit_superiority value=Submit class="btn btn-default" />
+                        </div>
+                    </div>
+				</form>
+			</div>
+		</div>
+
+		<div id="what_you_saw" class="col-sm-12" style="padding-top: 0px; display: none">
+			<h3>A question about data from the previous page</h3>
+
+			<div style="background-color:yellow; margin-bottom: 0.5em;">Warning: do not press the back button, that will exit the experiment</div>
+			<form id="what_you_saw_form">
+				<p>
+					What kind of error bars were shown in the plot on the previous page?
+				</p>
+
+                <div id="what_you_saw_radio_error" class="error-message" style="display: none">This question is required.</div>
+				<div id="recalled-se-wrapper" class="radio">
+					<label>
+                        <input type="radio" name="what_you_saw_radio" value="recalled_1_se" required>
+                        <span>1 standard error above the mean, and 1 standard error below the mean</span>
+                    </label>
+				</div>
+				<div id="recalled-sd-wrapper" class="radio">
+					<label>
+                        <input type="radio" name="what_you_saw_radio" value="recalled_1_sd" required>
+                        <span>1 standard deviation above the mean, and 1 standard deviation below the mean</span>
+                    </label>
+				</div>
+				<div id="recalled-se-wrapper" class="radio">
+					<label>
+                        <input type="radio" name="what_you_saw_radio" value="recalled_2_se" required>
+                        <span>2 standard errors above the mean, and 2 standard errors below the mean</span>
+                    </label>
+				</div>
+				<div id="recalled-sd-wrapper" class="radio">
+					<label>
+                        <input type="radio" name="what_you_saw_radio" value="recalled_2_sd" required>
+                        <span>2 standard deviations above the mean, and 2 standard deviations below the mean</span>
+                    </label>
+				</div>
+
+				<p>
+					What did the error bars on the previous page capture conceptually?
+				</p>
+                <div id="what_you_saw2_radio_error" class="error-message" style="display: none">This question is required.</div>
+				<div id="recalled-uncert-wrapper" class="radio">
+					<label>
+                        <input type="radio" name="what_you_saw2_radio" value="recalled_uncert_avg"
+                        required>
+                        <span>Uncertainty in estimating the average in each condition</span>
+                    </label>
+				</div>
+				<div id="recalled-sd-wrapper" class="radio">
+					<label>
+                        <input type="radio" name="what_you_saw2_radio" value="recalled_uncert_pop"
+                        required>
+                        <span>Variation in individual outcomes in each condition</span>
+                    </label>
+				</div>
+
+
+                <div class="center-align"> <input type=submit id=submit_what_you_saw value=Submit class="btn btn-default" /> </div>
+			</form>
+		</div>
+
+        <div id="game" style="display: none">
+            <h2>Interpreting statistical results</h2>
+			<div style="background-color:yellow; margin-bottom: 0.5em;">
+				Note: We estimate the rest of the study will only take a few more minutes.
+			</div>
+            <div id="dashboard" class="row card-panel">
+                <div class="col l6 m12">
+                    <h4>Trial <span id="trialdisplay">1</span> of <span id="trialmax">20</span></h4>
+                    <p>Suppose you're looking at the results of an experiment involving two groups of people: <span id="treatment_num">&nbsp;</span> people who received a treatment and <span id="control_num">&nbsp;</span> people who were in a control condition. The outcomes in each condition follow a bell curve (or normal distribution), as you might see for people’s heights or weights. The accompanying plot shows the estimated average outcome for each group with error bars showing one standard error above and below the average in each condition.
+                    </p>
+                    <p><b>What is your best estimate of the probability that a randomly selected person in the treatment group has a higher outcome than a randomly selected person in the control group?</b> (A 50% probability indicates no difference in outcomes between the treatment and control groups, on average.)
+                    </p>
+
+                    <div id="results">
+                        <div>
+                            <form action="#" id="theguess_form" class="input-field">
+                                Guess:
+                                <input type="number" class="psup-guess" id="theguess" placeholder="50-100 (%)" min=50 max=100></input>
+                                <button type="submit" class="btn waves-effect waves-light" id="submitguess">Submit guess</button>
+                            </form>
+                        </div>
+
+                        <div id="after_game">
+                            <div id="answer_block">
+                                Answer: <span id="answer">&nbsp;</span>
+                            </div>
+
+                            <div id="tutorial">Here’s a different view of the same exact data and estimates. The error bars still show the same standard errors around the estimated average in each group, but appear smaller because we have increased the range on the y axis. We’ve done so in order to show all of the individual outcomes.</div>
+                            <div>
+                                <button class="btn waves-effect waves-light" id="newgame">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col l6 m12">
+                    <div id="chart"></div>
+                </div>
+            </div>
+
+
+            <div id="confirmation_modal_pre" class="modal">
+                <div class="modal-content">
+                    <h4>What you are seeing is about to change</h4>
+                    <p>The error bars will still show one standard error around the estimated average in each group. In addition, <b>we will now show all of the individual outcomes.</b></p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-close waves-effect waves-green btn-flat">I understand</a>
+                </div>
+            </div>
+
+            <div id="confirmation_modal_post" class="modal">
+                <div class="modal-content">
+                    <h4>What you are seeing is about to change</h4>
+                    <p>The error bars will still show one standard error around the estimated average in each group, but <b>we will no longer show individual outcomes.</b></p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-close waves-effect waves-green btn-flat">I understand</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="background_survey" style="display: none">
+            <h3>A few final questions about you and your experience</h3>
+                <form id="background_survey_form">
+
+				<p><b>
+					1. Are you currently a tenure-track faculty at a PhD granting institution?
+				</b></p>
+				<div class="checkbox">
+					<label><input type="radio" name="tt_radio" value="yes" required><span>Yes</span></label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="tt_radio" value="no" required><span>No</span></label>
+				</div>
+				<br>
+
+				<p><b>
+					2. What best describes the department you're primarily affiliated with? (Choose "Other" if none are at all appropriate)
+				</b></p>
+				<div class="radio">
+					<label><input type="radio" name="department_radio" required value="business"><span>Business</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="department_radio" required value="computerscience"><span>Computer science</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="department_radio" required value="physicalscience"><span>Physical sciences</span></label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="department_radio" required value="lifescience"><span>Life sciences</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="department_radio" required value="socialscience"><span>Social sciences</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="department_radio" required value="statistics"><span>Mathematics or Statistics</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="department_radio" required value="other"><span>Other</span></label>
+				</div>
+
+				<!-- Comfort with statistics -->
+				<p><b>
+					3. How comfortable are you with understanding inferential statistics and hypothesis tests?
+				</b></p>
+				<div class="radio">
+					<label><input type="radio" name="comfort_with_stats_radio" required value="1"><span>Not at all</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="comfort_with_stats_radio" required value="2"><span>Somewhat</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="comfort_with_stats_radio" required value="3"><span>Moderately</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="comfort_with_stats_radio" required value="4"><span>Very</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="comfort_with_stats_radio" required value="5"><span>Extremely</span></label>
+				</div>
+
+				<br>
+                <!-- Comfort with data analysis -->
+				<p><b>
+					4. How comfortable are you with analyzing data and using statistical software?
+				</b></p>
+				<div class="radio">
+					<label><input type="radio" name="comfort_with_data_radio" required value="1"><span>Not at all</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="comfort_with_data_radio" required value="2"><span>Somewhat</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="comfort_with_data_radio" required value="3"><span>Moderately</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="comfort_with_data_radio" required value="4"><span>Very</span></label>
+				</div>
+				<div class="radio"><span>
+					<label><input type="radio" name="comfort_with_data_radio" required value="5"><span>Extremely</span></label>
+				</div>
+
+				<br>
+
+				<!-- Taught stats -->
+				<p><b>
+					5. Have you ever taught statistics or a related course at the undergraduate or graduate level?
+				</b></p>
+				<div class="radio">
+					<label><input type="radio" name="taught_stats_radio" required value="Yes"><span>Yes</span></label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="taught_stats_radio" required value="No"><span>No</span></label>
+				</div>
+
+				<br>
+
+				<!-- How many papers have you reviewed during your academic career? -->
+				<p><b>
+					6. How many papers have you reviewed during your academic career?
+				</b></p>
+                    <div class="radio"> <label><input type="radio" name="papers_reviewed_radio" required value="0"><span>0</span></label> </div>
+                    <div class="radio"> <label><input type="radio" name="papers_reviewed_radio" required value="1-10"><span>1-10</span></label> </div>
+                    <div class="radio"> <label><input type="radio" name="papers_reviewed_radio" required value="11-20"><span>11-20</span></label> </div>
+                    <div class="radio"> <label><input type="radio" name="papers_reviewed_radio" required value="21-50"><span>21-50</span></label> </div>
+                    <div class="radio"> <label><input type="radio" name="papers_reviewed_radio" required value="51-100"><span>51-100</span></label> </div>
+                    <div class="radio"> <label><input type="radio" name="papers_reviewed_radio" required value="100+"><span>More than 100</span></label> </div>
+				<br>
+
+				<br>
+
+                <div class="center-align">
+                    <input type="submit" id="submit_background_survey" value="Submit" class="btn btn-default" />
+                </div>
+			</form>
+        </div>
+
+        <div id="feedback_form" style="display: none">
+            <h3>Almost done</h3>
+            <div>If you would like, please share with us any thoughts you had about the article or the study more generally. We can use your feedback to improve our study. This survey is anonymous. Please do not enter any information that could identify you or others. <b style="color: red">Even if you have no feedback, please press the submit button to finish the study.</b> Thank you very much.</div>
+            <textarea id="feedback_area" style="margin-top: 1em" placeholder="Optional feedback"></textarea>
+            <form id="submit_to_turk" method="post"> </form>
+            <form id="submit_to_turk_visible" method="post">
+                <button type="submit" class="btn waves-effect waves-light" id="submitfeedback">Submit and finish study</button>
+            </form>
+        </div>
+
+        <div id="finished" style="display: none">
+            <h3>Thank you!</h3>
+            <div>The study has now concluded. Thanks for your participation. If you have any further questions, please email decisionresearchlab@outlook.com.</div>
+        </div>
+    </div>
+
+    
+    <!--<script type="text/javascript" src="https://unpkg.com/@stdlib/dist-flat"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@1.1.0-alpha/dist/js/materialize.min.js"></script>
+    <script src="dist/prob.js"></script>
+</body>
+</html>

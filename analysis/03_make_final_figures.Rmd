@@ -1,0 +1,160 @@
+---
+title: "The illusion of predictability in common scientific visualizations, final figures"
+date: "`r Sys.Date()`"
+always_allow_html: true
+output:
+  html_document:
+    code_folding: hide
+    fig_height: 5
+    fig_width: 6
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+---
+
+```{r GlobalOptions}
+options(knitr.duplicate.label = 'allow')
+```
+
+```{r setup, include = F}
+library(here)
+library(knitr)
+
+here::i_am("analysis/03_make_final_figures.Rmd")
+source(here("analysis/shared_analysis.R"))
+
+# Make sure to rerun the Makefile to purl these R files if those notebooks are
+# updated
+source(here("analysis/02_analyze_providers.R"))
+source(here("analysis/02_analyze_turkers.R"))
+
+faculty_bg <- read_faculty_bg()
+datascientist_bg <- read_ds_bg()
+
+attach(read_faculty_data(faculty_bg))
+attach(read_ds_data(datascientist_bg))
+
+if (!dir.exists('figures'))
+  dir.create('figures')
+
+if (!dir.exists('results'))
+  dir.create('results')
+
+theme_set(theme_bw())
+```
+
+
+# Loading data
+
+```{r}
+set.seed(1130)
+
+faculty_editorial_plot <- plot_editorial_data(faculty_editorial_data)
+faculty_editorial_plot
+```
+```{r}
+datascientist_editorial_plot <- plot_editorial_data(datascientist_editorial_data)
+datascientist_editorial_plot
+```
+```{r}
+faculty_editorial_psup_figure <- plot_editorial_psup(faculty_editorial_data)
+faculty_editorial_psup_figure
+```
+
+```{r}
+datascientist_editorial_psup_figure <- plot_editorial_psup(datascientist_editorial_data)
+datascientist_editorial_psup_figure
+```
+
+
+```{r}
+faculty_psup_game <-  plot_psup_game(faculty_trials)
+datascientist_psup_game <-  plot_psup_game(datascientist_trials)
+faculty_psup_game
+```
+Joining the plots together:
+```{r}
+(
+  (datascientist_editorial_psup_figure + labs(title="Perceived effectiveness", subtitle="A. Data scientists", x="\n")) +
+   (datascientist_editorial_plot + guides(color=guide_legend(title = NULL), fill=guide_legend(title = NULL)) + theme(legend.position = "bottom", legend.margin=margin(-1.2, unit='cm')) + labs(title="Editorial judgments", subtitle="B. Data scientists", x="\n")) +
+   (datascientist_psup_game + guides(fill="none", color="none") + labs(title="Calibration", subtitle="C. Data scientists", x="\n")) +
+    plot_layout(widths = c(4, 9, 4))
+) /
+  (
+  (faculty_editorial_psup_figure + labs(subtitle="D. Faculty")) + 
+  (faculty_editorial_plot + theme(legend.position = "none") + labs(subtitle="E. Faculty"))+ 
+  (faculty_psup_game + guides(fill="none", color="none") + labs(subtitle="F. Faculty")) +
+    plot_layout(widths = c(4, 9, 4))
+)  + plot_layout(heights=c(4, 4))
+```
+```{r}
+ggsave(here("analysis/figures/combined_editorial.pdf"), width=11, height=6)
+```
+
+Perceived psup vs. overall editorial judgment
+```{r}
+mod.editorial.mediation.bg.ds <- fit_psup_vs_overall_emm_datascientists(datascientist_bg, datascientist_editorial_data)
+mod.editorial.mediation.bg <- fit_psup_vs_overall_emm_faculty(faculty_bg, faculty_editorial_data)
+
+plot.fac.mediation <- plot_psup_vs_overall_emm(mod.editorial.mediation.bg, faculty_editorial_data) +
+  geom_vline(xintercept=58, linetype="dashed") +
+  geom_text(data=data.frame(x=58.5, y=4.6, text="True psup (58)"), aes(x=x,y=y,label=text), alpha=0.5, hjust="left", vjust="bottom") +
+  labs(subtitle="A. Faculty")
+
+plot.ds.mediation <- plot_psup_vs_overall_emm(mod.editorial.mediation.bg.ds, datascientist_editorial_data) +
+  geom_vline(xintercept=58, linetype="dashed") +
+  labs(subtitle="B. Data scientists", y="")
+
+plot.fac.mediation + plot.ds.mediation
+```
+```{r}
+ggsave(here("analysis/figures/combined_psup_vs_editorial.pdf"), width=7, height=4)
+```
+
+Medical providers figure
+```{r}
+((providers_estimated_psup + labs(x="\n") +  scale_y_continuous(label = function(x) paste0(x, "%"))) /
+  (providers_value_of_treatment) /
+  (providers_all_first_condition_distbuilder) + labs(y = 'Distribution builder:\n% of balls placed in each bin') + 
+    theme(legend.position = "bottom", legend.margin=margin(t=-10, b=0),
+          plot.margin=unit(c(0,0,0,0), "mm"),
+          )) +
+    #theme(legend.position = c(0.48, 0.9))) +
+    plot_layout(heights = c(3, 3, 3), width=5) + plot_annotation(tag_levels="A")
+```
+```{r}
+ggsave(here("analysis/figures/combined_providers_vertical.pdf"), width=5, height=8)
+```
+
+```{r}
+(turkers_estimated_psup + labs(x="\n") + scale_y_continuous(label = function(x) paste0(x, "%"))) +
+  (turkers_value_of_treatment) +
+  (turkers_all_first_condition_distbuilder + labs(y='Distribution builder:\n% of balls placed in each bin') +
+    #theme(legend.position = c(0.48, 0.9))) +
+    theme(legend.position = "bottom", legend.margin=margin(t=-10))) +
+    plot_layout(heights = c(3, 3, 3), width=5) + plot_annotation(tag_levels="A")
+```
+```{r}
+ggsave(here("analysis/figures/combined_turkers_vertical.pdf"), width=5, height=9)
+```
+
+```{r}
+((
+  (providers_estimated_psup + labs(x="")) / 
+  (providers_value_of_treatment + labs(x="First visualization seen"))
+  ) | (
+    (providers_all_first_condition_distbuilder + theme(legend.position = c(0.45, 0.91)))
+)) +
+    plot_layout(widths = c(6, 6), heights=6)
+  ```
+```{r}
+ggsave(here("analysis/figures/combined_providers.pdf"), width=10, height=6)
+```
+
+```{r}
+plot.implied.psups / plot.implied.psups.turker + plot_annotation(tag_levels="A")
+```
+
+```{r}
+ggsave(here("analysis/figures/providers_turkers_implied_distbuilder_psups.pdf"), width=5, height=7)
+```

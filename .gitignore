@@ -1,0 +1,10 @@
+.cosmosdb
+.aws
+__pycache__
+node_modules
+.ipynb_checkpoints
+.Rdata
+.Rhistory
+.DS_Store
+venv
+*.pdf

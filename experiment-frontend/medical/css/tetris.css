@@ -1,0 +1,86 @@
+#html_tetris, #body_tetris {
+	background-color:#212121;
+	color:#FFF;
+	font-family:verdana, arial, sans-serif;
+}
+
+#h1_tetris {
+	text-align:center;
+	font-size:16px;
+}
+
+#h2_tetris {
+	text-align:center;
+	font-size:14px;
+}
+
+#tetris {
+	margin:2em auto;
+	width:26em;
+	overflow:hidden;
+}
+
+#grid {
+	float:left;
+}
+
+#grid table, #next table {
+	border:0.2em solid #999999;
+}
+
+#grid td, #next td {
+	width:1.2em;
+	height:1.2em;
+	-moz-border-radius:0.5em;
+}
+
+#next {
+	margin-bottom:1em;
+	float:right;
+}
+
+#stats {
+	margin-bottom:1em;
+	float:right;
+	clear:right;
+}
+
+#stats div {
+	font-size:120%;
+	width:7em;
+	text-align:right;
+	visibility: hidden;
+}
+
+#cmd {
+	font-size:120%;
+	float:right;
+	clear:right;
+	width:7em;
+	text-align:right;
+	visibility: hidden;
+}
+
+#cmd input {
+	margin-bottom:1em;
+}
+
+#info {
+	font-size:120%;
+	float:right;
+	clear:right;
+	width:7em;
+	text-align:right;
+}
+
+#info input {
+	width:1.5em;
+	text-align:center;
+}
+
+#src {
+	font-family:verdana, arial, sans-serif;
+	font-size:80%;
+	color:#FFF;
+}
+

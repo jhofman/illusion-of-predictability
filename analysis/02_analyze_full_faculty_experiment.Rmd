@@ -1,0 +1,309 @@
+---
+title: "The illusion of predictability in common scientific visualizations, faculty"
+date: "`r Sys.Date()`"
+always_allow_html: true
+output:
+  html_document:
+    code_folding: hide
+    fig_height: 5
+    fig_width: 6
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+---
+
+```{r fac-setup, include = F}
+library(here)
+library(scales)
+library(patchwork)
+library(broom)
+library(broom.mixed)
+library(tidyverse)
+library(papaja)
+library(lme4)
+
+
+here::i_am("analysis/02_analyze_full_faculty_experiment.Rmd")
+set.seed(811)
+
+source(here("analysis/shared_analysis.R"))
+
+if (!dir.exists('figures'))
+  dir.create('figures')
+
+theme_set(theme_bw())
+
+faculty_experiment = "faculty"
+```
+
+
+# Loading data
+
+We have four datasets:
+* `-tidy-background.csv` contains the background information for each participant.
+* `-tidy-psup-game.csv` contains information on each trial of the psup game.
+* `-tidy-editorial.csv` contains the last trial for which we have data on each participant, and the corresponding editorial data thus far
+* `-tidy-elapsed.csv` contains the timing data for each stage and trial
+
+## Background questions
+
+We drop people who do not answer yes to any of the background questions or meet the other inclusion criteria. How many people would we drop?
+
+```{r}
+background_data <- read_faculty_bg()
+```
+
+How comfortable are the participants with statistics and data analysis?
+
+```{r}
+bg.field <- background_data %>%
+  mutate(departmentField=recode_factor(departmentField,
+                                       business="Business",
+                                       computerscience="CS",
+                                       lifescience="Life sciences",
+                                       other="Other",
+                                       physicalscience="Physical sciences",
+                                       socialscience="Social sciences",
+                                       statistics="Math/statistics")) %>%
+  filter(departmentField != "") %>%
+  ggplot(aes(x=departmentField)) +
+    geom_bar() +
+    theme(axis.text.x = element_text(angle=30, hjust=1)) +
+    xlab("Field")
+
+  
+
+bg.comfort.with.stats <- background_data %>%
+  ggplot(aes(x=comfortWithStats)) +
+    geom_bar() +
+    coord_cartesian(xlim = c(0.5, 5.5)) +
+    xlab("Comfort with statistics")
+
+bg.comfort.with.data <- background_data %>%
+  ggplot(aes(x=comfortWithData)) +
+    geom_bar() +
+    coord_cartesian(xlim = c(0.5, 5.5)) +
+    xlab("Comfort with data analysis")
+
+background_data %>% group_by(papersReviewed) %>%
+  summarise(count=n())
+
+bg.num.peer.reviews <- background_data %>%
+  filter(papersReviewed != "") %>%
+  mutate(papersReviewed = recode_factor(papersReviewed, "0"="0", "1-10"="1-10", "11-20"="11-20", "21-50"="21-50", "51-100"="51-100", "100+"="100+")) %>%
+  ggplot(aes(x=papersReviewed)) +
+    geom_bar() +
+    xlab("# of peer-reviews performed")
+
+bg.field / bg.comfort.with.stats / bg.comfort.with.data / bg.num.peer.reviews
+
+ggsave(paste("figures/", faculty_experiment, "_background.pdf", sep=""), width=4, height=8)
+
+bg.field + bg.comfort.with.stats + bg.comfort.with.data + bg.num.peer.reviews +
+  plot_annotation(title = "Background of academic faculty participants") +
+   plot_layout(nrow = 1)
+
+ggsave(paste("figures/", faculty_experiment, "_background_wide.pdf", sep=""), width=12, height=4)
+```
+
+```{r}
+table(background_data$taughtStats)
+```
+
+```{r}
+c(nrow(background_data %>% filter(isTenureTrackFaculty == "no")),
+nrow(background_data %>% filter(comfortWithStats == 1)),
+nrow(background_data %>% filter(comfortWithData == 1)),
+nrow(background_data %>% filter(papersReviewed == 0)))
+```
+
+```{r}
+assignments_to_drop = background_data %>% 
+  filter((isTenureTrackFaculty == "no") | (comfortWithStats == 1) | (comfortWithData == 1) | (papersReviewed == 0)) %>%
+  select(assignmentId)
+
+faculty_assignments_dropped <- nrow(assignments_to_drop)
+
+assignments_to_drop
+```
+
+```{r}
+table(background_data$departmentField)
+```
+
+
+## Trial and editorial data
+
+### Statistical tests
+```{r}
+attach(read_faculty_data(background_data))
+faculty_editorial_test_results <- editorial_tests(faculty_editorial_data)
+attach(faculty_editorial_test_results)
+
+faculty_editorial_test_results
+```
+
+### Editorial judgments
+```{r}
+editorial_plot <- plot_editorial_data(faculty_editorial_data)
+editorial_plot
+```
+
+```{r}
+ggsave(paste("figures/", faculty_experiment, "_editorial_responses_histograms_overlayed.pdf", sep=""), width=7, height=3)
+```
+
+### Probability of superiority judgment for paper
+
+```{r}
+editorial_psup_figure <- plot_editorial_psup(faculty_editorial_data)
+
+editorial_psup_figure
+```
+
+```{r}
+ggsave(paste("./figures/", faculty_experiment, "_estimated_psup.pdf", sep=""), width=4, height=4)
+```
+
+### Perceived error bars
+
+What did people think they saw?
+
+```{r}
+plot_whatYouSaw_q1(faculty_editorial_data)
+```
+
+
+```{r}
+ggsave(paste("./figures/", faculty_experiment, "_recalled_q1.pdf", sep=""), width=4, height=4)
+```
+
+```{r}
+faculty_recalled_test_results_q1 <- recalled_tests_q1(faculty_editorial_data)
+attach(faculty_recalled_test_results_q1)
+
+faculty_recalled_q1 <- faculty_recalled_test_results_q1$whatYouSaw %>% filter(paperA_whatYouSaw == "1 SE")
+faculty_recalled_q1_SEvsSD <- faculty_recalled_test_results_q1$whatYouSaw_SEvsSD %>% filter(whatYouSaw == "SE")
+
+faculty_recalled_test_results_q1
+```
+
+```{r}
+plot_whatYouSaw_q2(faculty_editorial_data)
+```
+
+```{r}
+ggsave(paste("./figures/", faculty_experiment, "_recalled_q2.pdf", sep=""), width=4, height=4)
+
+faculty_recalled_test_results <- recalled_tests(faculty_editorial_data)
+attach(faculty_recalled_test_results)
+
+faculty_recalled_test_results
+```
+
+### Mediation of overall effect by perceived error bars
+
+If we include the error bars as a covariate, can we explain the main effect of condition on the perceived probability of superiority?
+
+```{r}
+plot_accuracy_vs_recalled(faculty_editorial_data)
+```
+
+```{r}
+ggsave(paste("./figures/", faculty_experiment, "_recalled_q2_vs_psup.pdf", sep=""), width=6, height=4)
+```
+
+```{r}
+paper_psup_fac <- faculty_editorial_data %>% filter(!is.na(paperA_superiorityEstimate))
+mod.supestimate.mediation <- lm(paperA_superiorityEstimate ~ relevel(as.factor(paperA_whatYouSaw2), ref="recalled_uncert_pop") + condition, paper_psup_fac)
+summary(mod.supestimate.mediation)
+```
+Mediation of editorial judgment by perceived psup
+```{r}
+mod.editorial.mediation <- lm(q_overall ~ paperA_superiorityEstimate + condition, paper_psup_fac)
+summary(mod.editorial.mediation)
+```
+```{r}
+mod.editorial.mediation.bg <- fit_psup_vs_overall_emm_faculty(background_data, faculty_editorial_data)
+fac_mediation_psup_coef <- tidy(coeftest(mod.editorial.mediation.bg, vcov. = vcovCL, cluster=~departmentField)) %>% 
+  filter(term == "paperA_superiorityEstimate")
+fac_mediation_psup_coef
+```
+```{r}
+plot_psup_vs_overall_emm(mod.editorial.mediation.bg, faculty_editorial_data) +
+  geom_vline(xintercept=58, linetype="dashed") +
+  geom_text(data=data.frame(x=58.5, y=4.6, text="True psup (58)"), aes(x=x,y=y,label=text), alpha=0.5, hjust="left", vjust="bottom") 
+```
+
+```{r}
+ggsave(paste("./figures/", faculty_experiment, "_psup_vs_editorial.pdf", sep=""), width=4, height=4)
+```
+
+```{r}
+ggplot(paper_psup_fac, aes(x=paperA_superiorityEstimate, y=q_overall)) +
+  geom_jitter(aes(color=condition), width=0, height=0.2, alpha=0.5) +
+  geom_smooth() +
+  labs(x="Estimated probability of superiority", y="Overall recommendation")
+```
+
+```{r}
+ggplot(paper_psup_fac, aes(x=paperA_superiorityEstimate >= 90, y=q_overall)) +
+  geom_jitter(aes(color=condition), width=0.1, alpha=0.2) +
+  #geom_smooth() +
+  stat_summary(fun = mean, geom = "point", size=1.2) +
+  stat_summary(fun.data="mean_se",  fun.args = list(mult=1), 
+               geom="errorbar", color = "black", width=0.1) 
+  #geom_smooth(method='lm')
+```
+
+Do people from some field give more accurate estimates than others?
+```{r}
+paper_psup_fac_bg <- merge(
+  background_data %>% filter(departmentField != "") %>% select(-c(condition)),
+  paper_psup_fac,
+  by="assignmentId"
+)
+
+# 58 is the correct answer: look at absolute errors
+mod.est.by.field <- lm(abs(paperA_superiorityEstimate - 58) ~ condition + relevel(as.factor(departmentField), ref=7), paper_psup_fac_bg)
+summary(mod.est.by.field)
+```
+
+# Part II: Analyses of the psup game
+## True psup vs. signed error
+
+This is Part II of the experiment, and here we are examining how the guessed probability of superiority varies based on the true probability of superiority.
+
+```{r}
+plot_psup_game(faculty_trials)
+```
+
+```{r}
+ggsave(paste("./figures/", faculty_experiment, "_psup_game.pdf", sep=""), width=4, height=4)
+```
+
+```{r}
+faculty_psup_game_tests <- psup_game_tests(faculty_trials)
+attach(faculty_psup_game_tests)
+
+faculty_psup_game_tests
+```
+
+# Saving output in .Rdata for .Rtex document
+
+```{r}
+save(
+  faculty_assignments_dropped,
+  appeal_t_stats, overall_t_stats, sample_t_stats, 
+  editorial_psup_summaries, paper_psup_t_stats, paper_psup_extreme_props, paper_psup_extreme_t_stats,
+  faculty_recalled_q1, faculty_recalled_q1_SEvsSD, recalled_avg_means, recalled_avg_t_stats,
+  trials_lmer_coef, trials_extreme_means, trials_extreme_t_stats,
+  fac_mediation_psup_coef,
+  file=paste("results/", faculty_experiment, "_results.Rdata", sep=""))
+```
+
+# Part III: Free response feedback
+
+```{r free-response-feedback}
+show_feedback(faculty_experiment)
+```

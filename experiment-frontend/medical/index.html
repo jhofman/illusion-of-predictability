@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+	<title>Medical decision making</title>
+
+	<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css">
+	<link href="css/bootstrap-slider.min.css" rel="stylesheet" type="text/css">
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+	<link rel="stylesheet" href="css/blockrain.css">
+	<!-- Custom styles for this template -->
+	<link href="css/starter-template.css" rel="stylesheet">
+	<!-- <script type="text/javascript" src="js/d3.v3.min.js"></script> -->
+
+	<link href="css/style.css" rel="stylesheet" type="text/css">
+
+	<link rel="stylesheet" href="css/distributionbuilder.css">
+
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/blockrain.jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/purl.js"></script>
+	<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="js/sortable.min.js"></script>
+	<script>$.fn.slider = null</script>
+	<script type="text/javascript" src="js/bootstrap-slider.min.js"></script>
+
+	<script src="js/distributionbuilder.min.js"></script>
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<link rel="stylesheet" href="css/flat-light/jquery-ui-1.10.4.custom.min.css" />
+
+	<script src="js/medical.js"></script>
+
+	<script type="text/javascript">
+		// integer id for this round of experiments
+		var experiment_id = 1;
+		$(document).ready(main);
+	</script>
+
+</head>
+
+<body>
+	<div class="container">
+		<div id="preview" style="padding-top: 25px">
+			<center>
+				<p>We are researchers interested in helping people make decisions. In this task, you will read about
+					hypothetical scenarios about medical drug trials and be asked some
+					related questions. These scenarios range from treatments for high blood pressure to treatments for
+					COVID-19. If you are
+					uncomfortable thinking about these scenarios you may not want to accept the HIT.
+				</p>
+				<p>
+					If you answer all of the questions,
+					you will earn $2.00. This will take about 10 minutes.</p>
+				<br />
+				<br />
+				<b>You may only participate in this experiment once.
+					<span style="color: red">If you have seen this survey before or one like it, please don't do it
+						again..</span>
+				</b>
+				<br />
+				<br /> Otherwise you must accept this HIT to continue.
+			</center>
+		</div>
+
+		<div id="consent" class="col-sm-offset-1 col-sm-10" style="padding-top: 0px">
+
+			<h1 style="text-align: center"> Introduction </h1>
+			<div class="row">
+				<p>
+					In this task, you will read about hypothetical scenarios about medical drug trials and be asked some
+					related questions. These scenarios range from treatments for high blood pressure to treatments for
+					COVID-19. If you are
+					uncomfortable thinking about these scenarios you may not want to accept the HIT.
+					This
+					task
+					is part of a research project on decision making. You will be compensated $2.00 for your
+					participation.
+				</p>
+				<!-- BEGIN docx -->
+				<h3 id="microsoft-research-project-participation-consent-form">Microsoft Research Project Participation
+					Consent Form </h3>
+				<h4 id="introduction">INTRODUCTION</h4>
+				<p>Thank you for taking the time to consider volunteering in a Microsoft Corporation research project.
+					This form explains what would happen if you join this research project. Please read it carefully and
+					take as much time as you need. Email the study team to ask about anything that is not clear.</p>
+				<p>Participation in this study is voluntary and you may withdraw at any time.</p>
+				<h4 id="title-of-research-project">TITLE OF RESEARCH PROJECT</h4>
+				<p>Reasoning about medical trials</p>
+				<p>Principal Investigator: Dan Goldstein</p>
+				<h4 id="purpose">PURPOSE</h4>
+				<p>The purpose of this project is to study how people make decisions about medical trials.</p>
+				<h4 id="procedures">PROCEDURES</h4>
+				<p>During this project, you will read some information about hypothetical new medications and be shown
+					some
+					related graphs, and asked a few questions about each medication.</p>
+				<p>Microsoft may document and collect information about your participation by recording your answers to
+					multiple choice and free response questions.</p>
+				<!-- <p>Approximately 100 participants will be involved in this study.</p> -->
+				<h4 id="personal-information">PERSONAL INFORMATION </h4>
+				<p>Aside from your Mechanical Turk ID, no personal information will be collected during this study. Your
+					Mechanical Turk ID will not be shared outside of Microsoft Research and the confines of this study
+					without your permission, and will be promptly deleted after compensation has been successfully
+					provided (30 days or less). De-identified data may be used for future research or given to another
+					investigator for future use without additional consent.</p>
+				<ul>
+					<li>
+						<p>Microsoft Research is ultimately responsible for determining the purposes and uses of data
+							collected through this study.</p>
+						<p>For additional information or concerns about how Microsoft handles your personal information,
+							please see the <a href="https://privacy.microsoft.com/en-us/privacystatement">Microsoft
+								Privacy Statement</a> (<a
+								href="https://privacy.microsoft.com/en-us/privacystatement">https://privacy.microsoft.com/en-us/privacystatement</a>).
+						</p>
+					</li>
+				</ul>
+				<h4 id="benefits-and-risks">BENEFITS AND RISKS</h4>
+				<p><strong>Benefits:&nbsp; &nbsp;&nbsp;</strong>There are no direct benefits to you that might
+					reasonably be expected as a result of being in this study. The research team expects to learn about
+					human decision making from the results of this research, as well as any public benefit that may come
+					from these research results being shared with the greater scientific community.</p>
+				<p><strong>Risks:&nbsp;</strong> If you are unable to submit a HIT due to technical difficulties on your
+					end there is a risk of loss of payment. To mitigate participants can reach out to the research team
+					for input on resolving any difficulties encountered.</p>
+				<h4 id="payment-for-participation">PAYMENT FOR PARTICIPATION</h4>
+				<p>You will receive $2.00 after completing the entire study.</p>
+				<p>Your data and/or samples may be used to make new products, tests or findings. These may have value
+					and may be developed and owned by Microsoft and/or others. If this happens, there are no plans to
+					pay you.</p>
+				<h4 id="contact-information">CONTACT INFORMATION</h4>
+				<p>Should you have any questions concerning this project, or if you are injured as a result of being in
+					this study, please contact us at dgg@microsoft.com</p>
+				<p>Should you have any questions about your rights as a research subject, please contact Microsoft
+					Research Ethics Program Feedback at MSRStudyfeedback@microsoft.com.</p>
+				<h4>CONSENT</h4>
+				<p>By clicking “I agree” below, you confirm that the study was explained to you, you had a chance to ask
+					questions before beginning the study, and all your questions were answered satisfactorily. By
+					clicking “I agree” below, you voluntarily consent to participate, and you do not give up any legal
+					rights you have as a study participant.</p>
+				<!-- <p>You will be provided a link to download this form. On behalf of Microsoft, we thank you for your
+					contribution and look forward to your research session.</p> -->
+				<!-- END docx-->
+			</div>
+
+			<form id=consent_form action="javascript:submit_consent();">
+				<div class="form-group row">
+					<div class="checkbox">
+						<center>
+							<p>
+								<b>If you agree, click below. If you don't, return the HIT.</b>
+							</p>
+							<label>
+								<input type=checkbox id=consent_checkbox name=consent_checkbox value="">I agree to this
+								consent form</label>
+						</center>
+					</div>
+				</div>
+				<div class="form-group row">
+					<center>
+						<input type=submit id=submit_consent value=Continue class="btn btn-default" />
+					</center>
+				</div>
+			</form>
+
+		</div>
+
+		<div id="first_scenario" class="col-sm-12" style="padding-top:0px">
+			<div class="blood_pressure">
+				<center>
+					<h1>
+						Blood pressure in high risk patients
+					</h1>
+				</center>
+				<p>
+					Recent studies have shown that lowering systolic blood pressure below 120mm Hg reduces the
+					occurrence of
+					adverse cardiovascular events in high risk patients.
+				</p>
+				<p>
+					On the next screen we are going to show you information about a hypothetical new medication designed
+					to
+					<b>lower</b> blood pressure in high risk patients and ask you some questions about it.
+				</p>
+			</div>
+
+			<div class="covid_19">
+				<center>
+					<h1>
+						A hypothetical treatment for hospitalized COVID-19 patients
+					</h1>
+				</center>
+				<p>
+					There are many candidates being explored for treating patients who are hospitalized with COVID-19.
+				</p>
+				<p>
+					On the next screen we are going to show you information about a hypothetical new treatment for
+					COVID-19 designed to <b>reduce</b> time to recovery for patients hospitalized with COVID-19 and ask
+					you some questions about it.
+				</p>
+			</div>
+
+			<form id=first_scenario_form action="javascript:submit_first_scenario();">
+				<div class="form-group row">
+					<div class="checkbox">
+						<center>
+							<label>
+								<input type=checkbox id=first_scenario_checkbox name=first_scenario_checkbox value="">
+								<b>Click here to confirm you understand the scenario</b></label>
+						</center>
+					</div>
+				</div>
+				<div class="form-group row">
+					<center>
+						<input type=submit id=submit_first_scenario value=Continue class="btn btn-default" />
+					</center>
+				</div>
+			</form>
+		</div>
+
+		<div id="rct" class="col-sm-12" style="padding-top: 0px">
+			<div id="statistics" class="col-sm-8" style="padding-top: 0px">
+				<h1>
+					Results of a hypothetical randomized controlled trial
+				</h1>
+
+				<div class="blood_pressure">
+					<p>
+						Suppose that there is a new medication designed to <b>lower</b> blood pressure in high-risk
+						patients,
+						and
+						that it has been tested in a double-blind, randomized controlled trial restricted to patients
+						with
+						high systolic blood pressure.
+					</p>
+					<p>
+						Each patient's systolic blood pressure was measured by a physician in a pre-treatment
+						examination,
+						and if patients qualified for the trial they were randomly assigned to either a control or
+						treatment
+						group. <b>In the pre-treatment phase, participants in both groups had an average systolic blood
+							pressure of 130mm Hg. There were 150 patients in each of the treatment and control
+							groups.</b>
+					</p>
+					<p>
+						The control group received a placebo and the treatment group received the new medication.
+						Several
+						months later, each patient's systolic blood pressure was again measured by a physician in a
+						post-treatment examination.
+					</p>
+					<p>
+						<b>Here is a summary of the results of the trial, which are depicted in the figure to the
+							right:</b>
+					</p>
+					<ul>
+						<li>Participants in the control group had an average post-treatment systolic blood pressure of
+							130mm
+							Hg</li>
+						<li>Participants in the treatment group had an average post-treatment systolic blood pressure of
+							120mm Hg</li>
+					</ul>
+				</div>
+
+				<div class="covid_19">
+					<p>
+						Suppose that there is a new medication designed to <b>reduce</b> time to recovery for patients
+						hospitalized with COVID-19,
+						and that it has been tested in a double-blind, randomized controlled trial.
+					</p>
+					<p>
+						In the trial, patients admitted to the hospital for COVID-19 were randomly assigned to either a
+						control or
+						treatment
+						group. The control group received a placebo and the treatment group received the new medication.
+						The
+						primary outcome was the time to recovery (defined as discharge from the hospital). <b>There were
+							150 patients in each of the treatment and control groups.</b>
+					</p>
+
+					<p>
+						<b>Here is a summary of the results of the trial, which are depicted in the figure to the
+							right:</b>
+					</p>
+					<ul>
+						<li>Participants in the control group had an average time to recovery of 13 days</li>
+						<li>Participants in the treatment group had a average time to recovery of 9 days</li>
+					</ul>
+				</div>
+
+				<p>
+					Outcomes were approximately normally distributed in both groups before and after the treatment,
+					with roughly equal percentages of patients falling above and below the
+					average. <span id="error_bar_description"></span>
+				</p>
+			</div>
+
+			<div id="graph" class="col-sm-4" style="padding-top: 0px">
+			</div>
+
+			<div id="superiority" class="col-sm-12" style="padding-top: 0px">
+				<h1>Your estimate</h1>
+
+				<form class="form-inline" id="superiority_form" action="javascript:submit_superiority()">
+
+					<div class="blood_pressure">
+						What is your best estimate of the probability that, after the experiment, a randomly selected
+						patient in
+						the treatment group had a <b>lower</b> systolic blood pressure than a randomly selected patient
+						in the
+						control
+						group? (A 50% probability would indicate no difference in outcomes between the treatment and
+						control
+						groups.)
+					</div>
+
+					<div class="covid_19">
+						What is your best estimate of the probability that a randomly selected patient in the treatment
+						group recovered more quickly than a randomly selected patient in the control group? (A 50%
+						probability would indicate no difference in outcomes between the treatment and
+						control
+						groups.)
+					</div>
+
+					<center>
+						<input type="text" class="form-control mb-1 mr-sm-2 mb-sm-0" id="superiority_estimate"
+							name="superiority_estimate" autocomplete="off"> %
+					</center>
+					<div id="special_error" class="error-message"></div>
+					</br>
+					<center>
+						<input type=submit id=submit_superiority value=Submit class="btn btn-default" />
+					</center>
+				</form>
+			</div>
+
+
+			<div id="cost" class="col-sm-12" style="padding-top: 0px">
+				<h1>Another estimate</h1>
+
+				<form class="form-inline" id="cost_form" action="javascript:submit_cost()">
+					<span class="blood_pressure">
+						<b>Based on its effectiveness and the price of other medications, how much do you think a 30 day
+							supply of this new medication would be worth to patients with high blood pressure?</b> For
+						reference, a 30 day supply of generic <!-- angiotensin-converting enzyme (ACE) --> ACE inhibitors, also used to
+						lower blood pressure, costs about $20.
+					</span>
+					<span class="covid_19">
+						<b>Based on its effectiveness and the price of other medications, how much do you think a 5 day
+							supply of this new medication would be worth to patients hospitalized with COVID-19?</b> For
+						reference, a 5 day supply of the most popular drug used for this purpose costs about $2500.
+					</span>
+
+					<center>
+						$ <input type="text" class="form-control mb-1 mr-sm-2 mb-sm-0" id="cost_estimate"
+							name="cost_estimate" autocomplete="off">
+					</center>
+					<div id="cost_error" class="error-message"></div>
+					</br>
+					<center>
+						<input type=submit id=submit_cost value=Submit class="btn btn-default" />
+					</center>
+				</form>
+			</div>
+
+		</div>
+
+		<div id="what_you_saw" class="col-sm-12" style="padding-top: 0px">
+			<h1>A question about data from the previous page</h1>
+
+			<form id="what_you_saw_form" action="javascript:submit_what_you_saw()">
+				<p>
+					What kind of error bars were shown in the plot on the previous page?
+				</p>
+
+				<div id="recalled-se-wrapper" class="radio">
+					<label><input type="radio" name="what_you_saw_radio" value="recalled_se">Standard errors, showing
+						uncertainty in estimating the average in each condition</label>
+				</div>
+				<div id="recalled-sd-wrapper" class="radio">
+					<label><input type="radio" name="what_you_saw_radio" value="recalled_sd">Standard deviations,
+						showing the variation in individual outcomes in each condition</label>
+				</div>
+
+				<div id="what_you_saw_error" class="col-sm-12 error-message"></div>
+				</br>
+				<center>
+					<input type=submit id=submit_what_you_saw value=Submit class="btn btn-default" />
+				</center>
+			</form>
+		</div>
+
+
+		<div id="distbuilder" class="col-sm-12" style="padding-top: 0px">
+			<form class="form-inline" id="distbuilder_form" action="javascript:submit_distbuilder()"
+				onSubmit="return validate_distbuilder()">
+				<h1>A Closer Look</h1>
+				<div id="distbuilder-standard-wrapper">
+					<h3>Your expectations for the control condition <font color="red">(the placebo)</font>
+					</h3>
+
+					<div class="blood_pressure">
+						If you were to treat 100 patients <b class="standard-color">using <font color="red">the placebo
+							</font> described in the
+							randomized controlled trial you just read about</b>, how many patients do you think would
+						have a
+						post-treatment systolic blood pressure in each range?
+						<span class="distbuilder_mean">Recall that the average post-treatment systolic blood pressure
+							with
+							the placebo (the control condition) was 130mm Hg. </span>
+					</div>
+
+					<div class="covid_19">
+						If you were to treat 100 patients <b class="standard-color">using <font color="red">the placebo
+							</font> described in the
+							randomized controlled trial you just read about</b>, how many days do you think it would
+						take each patient to recover?
+						<span class="distbuilder_mean">Recall that the average time to recovery
+							with
+							the placebo (the control condition) was 13 days. </span>
+					</div>
+
+					<div style="padding:24px">
+						<span class="blood_pressure">
+							<i>Please use the +/- buttons to show how many patients you think you would see in each
+								systolic
+								blood pressure range. </i> <br />
+						</span>
+
+						<span class="covid_19">
+							<i>Please use the +/- buttons to show how many patients you think would recover in
+								each day range. </i> <br />
+						</span>
+
+						<div id="distbuilder-standard"></div>
+
+						<center>
+							<div id="standard-numleft">You have 100 patients left to place.</div>
+						</center>
+						<center>
+							<div id="distbuilder-standard-error" class="error-message"> </div>
+						</center>
+					</div>
+				</div>
+				<div id="distbuilder-special-wrapper">
+					<h3>Your expectations for the treatment condition <font color="blue">(the new medication)</font>
+					</h3>
+
+					<div class="blood_pressure">
+						If you were to treat 100 patients <b class="standard-color">using <font color="blue">the new
+								medication</font> described in
+							the
+							randomized controlled trial you just read about</b>, how many patients do you think would
+						have a
+						post-treatment systolic blood pressure in each range?
+						<span class="distbuilder_mean">Recall that the average post-treatment systolic blood pressure
+							with
+							the new medication (the treatment condition) was 120mm Hg. </span>
+					</div>
+
+					<div class="covid_19">
+						If you were to treat 100 patients <b class="standard-color">using <font color="blue">the new
+								medication</font> described in
+							the
+							randomized controlled trial you just read about</b>, how many days do you think it would
+						take each patient to recover?
+						<span class="distbuilder_mean">Recall that the average time to recovery
+							with
+							the new medication (the treatment condition) was 9 days. </span>
+					</div>
+
+					<div style="padding:24px">
+						<span class="blood_pressure">
+							<i>Please use the +/- buttons to show how many patients you think you would see in each
+								systolic
+								blood pressure range. </i> <br />
+						</span>
+
+						<span class="covid_19">
+							<i>Please use the +/- buttons to show how many patients you think would recover in
+								each day range. </i> <br />
+						</span>
+
+						<div id="distbuilder-special"></div>
+
+						<center>
+							<div id="special-numleft">You have 100 patients left to place.</div>
+						</center>
+						<center>
+							<div id="distbuilder-special-error" class="error-message"> </div>
+						</center>
+					</div>
+				</div>
+				<center>
+					<input type=submit id=submit_distbuilder value=Submit class="btn btn-default" />
+				</center>
+			</form>
+		</div>
+
+
+		<!-- TODO: change wording if they get the other scenario first -->
+		<div id="second_scenario" class="col-sm-12" style="padding-top:0px">
+			<center>
+				<h1>
+					A second scenario
+				</h1>
+			</center>
+			<p class="blood_pressure">
+				On the next screen we are going to show you another scenario about a hypothetical new medication
+				designed to <b>lower</b> blood pressure in high risk patients and ask you some questions about it.
+			</p>
+			<p class="covid_19">
+				On the next screen we are going to show you another scenario about a hypothetical new treatment for
+				COVID-19 designed
+				to <b>reduce</b> time to recovery and ask you some questions about it.
+			</p>
+			<p>
+				Whereas <b>in the previous scenario the error bars showed two <span style="font-style: italic;"
+						id="first_condition_bars">standard errors</span></b> above and below the average in
+				each group, <b>in the next scenario the error bars show two <span style="font-style: italic;"
+						id="second_condition_bars">standard deviations</span></b> above and below the average in each
+				group.
+			</p>
+
+			<form id=second_scenario_form action="javascript:submit_second_scenario();">
+				<div class="form-group row">
+					<div class="checkbox">
+						<center>
+							<label>
+								<input type=checkbox id=second_scenario_checkbox name=second_scenario_checkbox value="">
+								<b>Click here to confirm you understand the change in the meaning of the error
+									bars</b></label>
+						</center>
+					</div>
+				</div>
+				<div class="form-group row">
+					<center>
+						<input type=submit id=submit_second_scenario value=Continue class="btn btn-default" />
+					</center>
+				</div>
+			</form>
+		</div>
+
+		<div id="final_submit" class="col-sm-12" style="padding-top: 0px">
+			<center>
+				<h1> Thank you! </h1>
+
+				<p> You must click the submit button to turn in your answers and complete the HIT. </p>
+				<form id="submit_to_turk" method="post">
+					<div class="col-sm-12" style="padding: 12px">
+						<!--Is there anything about this study that you found confusing? <br />-->
+						<!-- <label for="feedback">Please leave feedback or comments below.</label> -->
+						<label for="feedback">Please explain in a few sentences how you thought about the estimates you
+							made in this experiment.</label>
+						<textarea class="form-control" id="feedback" rows="5" name="feedback"></textarea>
+					</div>
+					<div class="form-group row">
+						<input type=submit id=turk_form value="Submit answers back to turk" class="btn btn-default" />
+					</div>
+				</form>
+			</center>
+		</div>
+
+		<div id="done" class="col-sm-12" style="padding-top: 0px">
+			<center>
+				<p>
+				<h3>Thanks, just a moment while we make sure we've recorded all of your responses ...</h3>
+				</p>
+				<div class="lds-ring">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			</center>
+		</div>
+</body>
+
+</html>

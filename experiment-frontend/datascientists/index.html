@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@1.1.0-alpha/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="dist/prob.css" type="text/css">
+	<title>Consent to study</title>
+</head>
+<body>
+	<div id="consent" class="container" style="margin-bottom: 5em">
+		<h1> Interpreting statistical results </h1>
+		<div class="row">
+			<p>
+				Thanks for participating in this study! It has two parts and should take ~15 minutes.
+			</p>
+			<p>
+				In this study, you will be presented with statistical information and will be asked for your judgments based on this information. This study is part of a research project on decision making.
+			</p>
+			<div style="background-color:yellow; margin-bottom: 0.5em;">For each person who completes this study we will make a donation to the United Nations COVID-19 relief effort.</div>
+			<!-- BEGIN docx -->
+		</div>
+		<div id="consent-text" class="row">
+			<h3 id="microsoft-research-project-participation-consent-form">Microsoft Research Project Participation
+				Consent Form </h3>
+			<h4 id="introduction">INTRODUCTION</h4>
+			<p>
+			Thank you for taking the time to consider volunteering in a Microsoft Corporation research project. This form explains what would happen if you join this research project. Please read it carefully and take as much time as you need. Email the study team to ask about anything that is not clear.
+</p>
+			<p>Participation in this study is voluntary and you may withdraw at any time.</p>
+			<h4 id="title-of-research-project">TITLE OF RESEARCH PROJECT</h4>
+			<p>Scientific incentives and statistical reporting</p>
+			<p>Principal Investigator: Jake Hofman</p>
+			<h4 id="purpose">PURPOSE</h4>
+			<p>The purpose of this project is to study how people perceive and evaluate scientific evidence.
+			</p>
+			<h4 id="procedures">PROCEDURES</h4>
+			<p>During this project, you will be shown an extended abstract for a paper. Please read it as if you were an editor for a scientific journal, deciding on whether to accept the paper. After you read the abstract we'll ask you a few questions.</p>
+			<p>Microsoft may document and collect information about your participation by recording your answers to
+				multiple choice and free response questions.</p>
+			<p>Approximately 300 participants will be involved in this study.</p> 
+			<h4 id="personal-information">PERSONAL INFORMATION </h4>
+			<p> Aside from some optional responses on your educational background, no personal information will be collected during this study. This anonymous data may be used for future research or given to another investigator for future use without additional consent. </p>
+			<ul>
+				<li>
+					<p>Microsoft Research is ultimately responsible for determining the purposes and uses of data
+						collected through this study.</p>
+					<p>For additional information or concerns about how Microsoft handles your personal information,
+						please see the <a href="http://go.microsoft.com/fwlink/?LinkId=521839">Microsoft
+							Privacy Statement</a> (<a
+							href="http://go.microsoft.com/fwlink/?LinkId=521839">http://go.microsoft.com/fwlink/?LinkId=521839</a>).
+					</p>
+					<p>
+						For Employees, External Staff and Candidates please use the Microsoft Global Data Privacy Notice (<a href="http://go.microsoft.com/fwlink/?LinkId=518021">http://go.microsoft.com/fwlink/?LinkId=518021</a>). 
+					</p>
+				</li>
+			</ul>
+			<h4 id="benefits-and-risks">BENEFITS AND RISKS</h4>
+			<p><strong>Benefits:&nbsp; &nbsp;&nbsp;</strong>There are no direct benefits to you that might
+				reasonably be expected as a result of being in this study. The research team expects to learn about
+				human decision making from the results of this research, as well as any public benefit that may come
+				from these research results being shared with the greater scientific community.</p>
+			<p><strong>Risks:&nbsp;</strong> The risk for this study is no higher than encountered in everyday life.</p>
+			<h4 id="payment-for-participation">PAYMENT FOR PARTICIPATION</h4>
+			<p>You will not receive direct compensation for completing this study. Instead, for each person who completes this study we will make a donation of one set of personal protective equipment (PPE) to the United Nations COVID-19 relief effort.</p>
+			<p>Your data may be used to make new products, tests or findings. These may have value
+				and may be developed and owned by Microsoft and/or others. If this happens, there are no plans to
+				pay you.</p>
+			<h4 id="contact-information">CONTACT INFORMATION</h4>
+			<p>Should you have any questions concerning this project, or if you are injured as a result of being in
+				this study, please contact us at jmh@microsoft.com</p>
+			<p>Should you have any questions about your rights as a research subject, please contact Microsoft
+				Research Ethics Program Feedback at MSRStudyfeedback@microsoft.com.</p>
+			<h4>CONSENT</h4>
+			<p>By clicking “I agree” below, you confirm that the study was explained to you, you had a chance to ask
+				questions before beginning the study, and all your questions were answered satisfactorily. By
+				clicking “I agree” below, you voluntarily consent to participate, and you do not give up any legal
+				rights you have as a study participant.</p>
+
+			<p>Thank you for your contribution and we look forward to your research session.</p>
+		</div>
+
+		<form id="consent_form" action="javascript:submit_consent();">
+			<div class="form-group row">
+				<div class="checkbox">
+					<center>
+						<p>
+							<b>If you agree, click below. If you don't, please close this page.</b>
+						</p>
+						<div id="error" style="color: red; display: none">Consent is required to participate in this study.</div>
+						<label for="consent_checkbox">
+							<input type="checkbox" id="consent_checkbox" name="consent_checkbox" />
+							<span>I agree to this consent form</span>
+						</label>
+					</center>
+				</div>
+			</div>
+			<div class="form-group row">
+				<center>
+					<input type=submit id=submit_consent value=Continue class="btn btn-default" />
+				</center>
+			</div>
+		</form>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@1.1.0-alpha/dist/js/materialize.min.js"></script>
+	<script src="dist/consent.js"></script>
+</body>
+
+</html>
