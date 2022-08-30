@@ -1,7 +1,7 @@
-# The illusion of predictability in common scientific visualizations
+# An illusion of predictability in scientific results
 
 ## Analysis 
-This repository contains the data analysis code that accompanies the manuscript "The illusion of predictability in common scientific visualizations". All Mechanical Turk worker IDs have been anonymized.
+This repository contains the data analysis code that accompanies the manuscript "An illusion of predictability in scientific results". All Mechanical Turk worker IDs have been anonymized.
 
 Steps for running the analysis code:
 1. Initialize a Python environment and install the dependencies in `requirements.txt` or `requirements-osx.txt`.
