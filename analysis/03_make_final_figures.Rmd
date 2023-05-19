@@ -57,7 +57,7 @@ datascientist_editorial_plot <- plot_editorial_data(datascientist_editorial_data
 datascientist_editorial_plot
 ```
 ```{r}
-faculty_editorial_psup_figure <- plot_editorial_psup(faculty_editorial_data)
+faculty_editorial_psup_figure <- plot_editorial_psup(faculty_editorial_data, cex=1.25)
 faculty_editorial_psup_figure
 ```
 
@@ -146,7 +146,7 @@ ggsave(here("analysis/figures/combined_turkers_vertical.pdf"), width=5, height=9
     (providers_all_first_condition_distbuilder + theme(legend.position = c(0.45, 0.91)))
 )) +
     plot_layout(widths = c(6, 6), heights=6)
-  ```
+```
 ```{r}
 ggsave(here("analysis/figures/combined_providers.pdf"), width=10, height=6)
 ```

@@ -33,7 +33,7 @@ read_ds_data <- function(background_ds) {
   
   
   assignments_to_drop1 = background_ds %>% 
-    filter((has_any_stats_training == 0) || (rctComfort == 1)) %>%
+    filter((has_any_stats_training == 0) | (rctComfort == 1)) %>%
     select(assignmentId)
   
   assignments_to_drop = c(
@@ -176,7 +176,7 @@ editorial_tests <- function(editorial) {
   )
 }
 
-plot_beeswarm_two_conditions_with_truth <- function(data, truth, x_var, y_var) {
+plot_beeswarm_two_conditions_with_truth <- function(data, truth, x_var, y_var, cex=2) {
   if (typeof(truth) == "double") {
     truth_line = geom_abline(slope=0, intercept=truth, linetype="dashed")
   }
@@ -185,7 +185,7 @@ plot_beeswarm_two_conditions_with_truth <- function(data, truth, x_var, y_var) {
   }
   
   ggplot(data, aes_string(x=x_var, y=y_var)) +
-    geom_quasirandom(mapping=aes_string(color=x_var), alpha=0.5) +
+    geom_beeswarm(mapping=aes_string(color=x_var), cex=cex, method='center', alpha=0.5) +
   #  scale_color_manual(values=c("#af8dc3", "#7fbf7b")) +
     stat_summary(fun = mean, geom = "point", size=1.2) +
     stat_summary(fun.data="mean_se",  fun.args = list(mult=1), 
@@ -194,7 +194,7 @@ plot_beeswarm_two_conditions_with_truth <- function(data, truth, x_var, y_var) {
     truth_line
 }
 
-plot_editorial_psup <- function(editorial_data) {
+plot_editorial_psup <- function(editorial_data, cex=2) {
   paper_psup_ds = editorial_data %>% filter(!is.na(paperA_superiorityEstimate))
   
   plottable <- paper_psup_ds %>%
@@ -202,7 +202,7 @@ plot_editorial_psup <- function(editorial_data) {
       condition=recode_factor(condition, "SE Only"="SEs only", "SE + Points"="SEs + Points")
     )
   
-  plot_beeswarm_two_conditions_with_truth(plottable, 59, "condition", "paperA_superiorityEstimate") +
+  plot_beeswarm_two_conditions_with_truth(plottable, 59, "condition", "paperA_superiorityEstimate", cex=cex) +
     xlab("Condition") +
     ylab("Estimated probability\nof superiority") +
     scale_y_continuous(label = function(x) paste0(x, "%"))
