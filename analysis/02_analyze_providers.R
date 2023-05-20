@@ -166,51 +166,6 @@ ggplot(df, aes(x = time_spent)) +
   xlim(c(0,60))
 
 
-## ----background---------------------------------------------------------------
-bg.rct <- ggplot(df, aes(x=comfort_with_rcts)) +
-  geom_bar() +
-  xlab("Comfort with RCTs")
-
-bg.yrs.experience <- df %>%
-  mutate(years_experience=recode_factor(years_experience,
-                                       "Less than 1 year"="< 1",
-                                       "1-2 years"="1-2",
-                                       "3-5 years"="3-5",
-                                       "6-10 years"="6-10",
-                                       "11-20 years"="11-20",
-                                       "21-30 years"="21-30",
-                                       "30+ years"="30+")) %>%
-  ggplot(aes(x=years_experience)) +
-  xlab("Years of experience") +
-  geom_bar()
-
-bg.position <- df %>%
-  mutate(position=recode_factor(position,
-                                "staff"="Staff",
-                                "nurse_practitioner"="NP",
-                                "physician_assistant"="PA",
-                                "doctor"="Doctor",
-                                "other"="Other"
-                                )) %>%
-  ggplot(aes(x=position)) +
-  xlab("Position") +
-  geom_bar()
-  
-
-bg.rct / bg.yrs.experience / bg.position
-
-
-## -----------------------------------------------------------------------------
-ggsave(here("analysis/figures/providers-background.pdf"), width=4, height=6)
-
-bg.rct + bg.yrs.experience + bg.position +
-  plot_annotation(title = "Background of medical provider participants")
-
-
-## -----------------------------------------------------------------------------
-ggsave(here("analysis/figures/providers-background-wide.pdf"), width=10, height=3)
-
-
 ## ----first-superiority-estimate-----------------------------------------------
 
 providers_estimated_psup <- plot_beeswarm_two_conditions_with_truth(df, true_effects, "first_condition", "first_superiority_estimate") +
@@ -237,13 +192,13 @@ covid_sd_first_mu <- (summary_stats_providers %>% filter(medication_type == "COV
 blood_psup_test <- (df %>%
   filter(medication_type == "Blood pressure scenario") %>%
   t.test(first_superiority_estimate ~ first_condition, data = .) %>%
-  apa_print())$statistic %>%
+  apa_custom())$statistic %>%
   remove_dollar_signs()
 
 covid_psup_test <- (df %>%
   filter(medication_type == "COVID-19 scenario") %>%
   t.test(first_superiority_estimate ~ first_condition, data = .) %>%
-  apa_print())$statistic %>%
+  apa_custom())$statistic %>%
   remove_dollar_signs()
   
 # Extreme values
@@ -272,14 +227,14 @@ blood_extreme_test <- (df %>%
   filter(medication_type == "Blood pressure scenario") %>%
   mutate(extreme = first_superiority_estimate > 90) %>%
   t.test(extreme ~ first_condition, data=.) %>%
-  apa_print())$statistic %>%
+  apa_custom())$statistic %>%
   remove_dollar_signs()
 
 covid_extreme_test <- (df %>%
   filter(medication_type == "COVID-19 scenario") %>%
   mutate(extreme = first_superiority_estimate > 90) %>%
   t.test(extreme ~ first_condition, data=.) %>%
-  apa_print())$statistic %>%
+  apa_custom())$statistic %>%
   remove_dollar_signs()
 
 c(blood_psup_test, covid_psup_test, blood_extreme_test, covid_extreme_test)
@@ -624,37 +579,6 @@ providers_value_of_treatment
 
 ## -----------------------------------------------------------------------------
 ggsave(here("analysis/figures/providers_estimated_value_log10.pdf"), width=6, height=4)
-
-
-## -----------------------------------------------------------------------------
-df.no.missing.bg <- df %>%
-  filter(if_all(c(first_superiority_estimate, first_cost_estimate, first_condition, position, comfort_with_rcts, current_research, years_experience), ~ !is.na(.x))) %>%
-  mutate(first_condition = as.factor(first_condition),
-         position = as.factor(position),
-         comfort_with_rcts = as.factor(comfort_with_rcts),
-         current_research = as.factor(current_research),
-         years_experience = as.factor(years_experience))
-
-mod.providers.mediation.covid <- lm(log10(first_cost_estimate + 1) ~ first_superiority_estimate + first_condition + position + comfort_with_rcts + current_research + years_experience, df.no.missing.bg %>% filter(medication_type == "COVID-19 scenario"))
-
-mod.providers.mediation.blood <- lm(log10(first_cost_estimate + 1) ~ first_superiority_estimate + first_condition + position + comfort_with_rcts + current_research + years_experience, df.no.missing.bg %>% filter(medication_type == "Blood pressure scenario"))
-
-coeftest(mod.providers.mediation.blood, vcov. = vcovCL)
-
-## -----------------------------------------------------------------------------
-emm_mediation_blood <- ggemmeans( mod.providers.mediation.blood, terms=c("first_superiority_estimate"), interval="confidence", vcov.fun="vcovHC", vcov.type = "HC0")
-
-emm_mediation_covid <- ggemmeans( mod.providers.mediation.covid, terms=c("first_superiority_estimate"), interval="confidence", vcov.fun="vcovHC", vcov.type = "HC0")
-
-emm_blood_plot <- plot(emm_mediation_blood, ci=TRUE, use.theme=FALSE) +
-  labs(title="", x="Estimated probability of superiority\n(Blood pressure scenario)", y="Estimated value (log10)") +
-  geom_jitter(data=df.no.missing.bg %>% filter(medication_type == "Blood pressure scenario"), aes(x=first_superiority_estimate, y=log10(first_cost_estimate + 1)), width=0, height=0.2, alpha=0.5) 
-
-emm_covid_plot <- plot(emm_mediation_covid, ci=TRUE, use.theme=FALSE) +
-  labs(title="", x="Estimated probability of superiority\n(COVID-19 scenario)", y="Estimated value (log10)") +
-  geom_jitter(data=df.no.missing.bg %>% filter(medication_type == "COVID-19 scenario"), aes(x=first_superiority_estimate, y=log10(first_cost_estimate + 1)), width=0, height=0.2, alpha=0.5) 
-
-emm_blood_plot + emm_covid_plot
 
 
 ## ----first-cost-estimate-sig-test---------------------------------------------

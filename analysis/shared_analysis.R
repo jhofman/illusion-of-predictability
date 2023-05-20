@@ -7,6 +7,18 @@ library(lmtest)
 library(papaja)
 library(tidyverse)
 
+apa_custom <- function(t.test.object) {
+    t.df <- round(t.test.object$parameter, digits=1)
+    t.stat <- signif(t.test.object$statistic, digits=3)
+    p.val <- apa_p(t.test.object$p.value)
+    p.text <- paste("p = ", p.val, sep="")
+
+    if (p.val == "< .001") {
+        p.text <- paste("p ", p.val, sep="")
+    }
+    list(statistic=paste("$t(", t.df, ") = ", t.stat, "$, $", p.text, "$", sep=""))
+}
+
 read_ds_bg <- function() {
   experiment = "datascientists"
   background_ds <- read.csv(here(paste("tidy-data/", experiment, "-tidy-background.csv", sep=""))) %>% filter(!is.na(rctComfort))
@@ -127,19 +139,19 @@ editorial_tests <- function(editorial) {
   appeal_t_stats <- (editorial_responses_long %>%
     filter(variable == "q_appeal") %>%
     t.test(value ~ condition, data = .) %>%
-    apa_print())$statistic %>%
+    apa_custom())$statistic %>%
     remove_dollar_signs()
   
   overall_t_stats <- (editorial_responses_long %>%
     filter(variable == "q_overall") %>%
     t.test(value ~ condition, data = .) %>%
-    apa_print())$statistic %>%
+    apa_custom())$statistic %>%
     remove_dollar_signs()
   
   sample_t_stats <- (editorial_responses_long %>%
     filter(variable == "q_sample_size") %>%
     t.test(value ~ condition, data = .) %>%
-    apa_print())$statistic %>%
+    apa_custom())$statistic %>%
     remove_dollar_signs()
   
   editorial_psup_summaries =  paper_psup_ds %>%
@@ -149,7 +161,7 @@ editorial_tests <- function(editorial) {
       sd=sd(paperA_superiorityEstimate),
     )
   
-  paper_psup_t_stats <- apa_print(t.test(paperA_superiorityEstimate ~ condition, data = paper_psup_ds))$statistic %>%
+  paper_psup_t_stats <- apa_custom(t.test(paperA_superiorityEstimate ~ condition, data = paper_psup_ds))$statistic %>%
     remove_dollar_signs()
   
   # Extreme values (means)
@@ -163,7 +175,7 @@ editorial_tests <- function(editorial) {
   paper_psup_extreme_t_stats <- (paper_psup_ds %>%
     mutate(extreme = paperA_superiorityEstimate > 90) %>%
     t.test(extreme ~ condition, data=.) %>%
-    apa_print())$statistic %>%
+    apa_custom())$statistic %>%
     remove_dollar_signs()
   
   list(
@@ -306,7 +318,7 @@ recalled_tests <- function(editorial) {
     
   recalled_avg_t_stats <- (mutate(paper_psup_ds, recalled_avg = paperA_whatYouSaw2 == "recalled_uncert_avg") %>% 
     t.test(recalled_avg ~ condition, data=.) %>%
-      apa_print())$statistic  %>% remove_dollar_signs()
+      apa_custom())$statistic  %>% remove_dollar_signs()
   
   list(recalled_avg_means=recalled_avg_means, recalled_avg_t_stats=recalled_avg_t_stats)
 }
@@ -344,7 +356,7 @@ psup_game_tests <- function(psup_game) {
   trials_extreme_t_stats <- (psup_game %>%
     mutate(extreme = guess > 90) %>%
     t.test(extreme ~ condition, data=.) %>%
-    apa_print())$statistic
+    apa_custom())$statistic
   
   list(trials_lmer_coef=trials_lmer_coef,
        trials_extreme_means=trials_extreme_means,
@@ -392,7 +404,7 @@ fit_psup_vs_overall_emm_datascientists <- function(background_ds, datascientist_
 
 plot_psup_vs_overall_emm <- function(fitted.model, editorial_data) {
   paper_psup <- editorial_data %>% filter(!is.na(paperA_superiorityEstimate))
-  emm_mediation <- ggemmeans(fitted.model, terms=c("paperA_superiorityEstimate"), interval="confidence", vcov.fun="vcovCR", vcov.type = "HC0")
+  emm_mediation <- ggemmeans(fitted.model, terms=c("paperA_superiorityEstimate"), interval="confidence", vcov.fun="vcovCR", vcov.type = "HC0", rg.limit=20000)
   
   plot(emm_mediation, ci=TRUE, use.theme=FALSE, colors=hue_pal()(4)) +
     labs(title="", x="Estimated probability of superiority", y="Overall recommendation") +
