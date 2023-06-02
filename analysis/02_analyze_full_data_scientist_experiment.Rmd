@@ -54,7 +54,7 @@ As preregistered, we drop people who do not answer yes to any of the background 
 background_ds <- read_ds_bg()
 
 assignments_to_drop1 = background_ds %>% 
-  filter((has_any_stats_training == 0) || (rctComfort == 1)) %>%
+  filter((has_any_stats_training == 0) | (rctComfort == 1)) %>%
   select(assignmentId)
 
 background_with_number_done <- background_ds %>% 

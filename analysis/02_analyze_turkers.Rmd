@@ -274,13 +274,13 @@ covid_sd_first_mu <- (summary_stats_providers %>% filter(medication_type == "COV
 blood_psup_test <- (df.turkers %>%
   filter(medication_type == "Blood pressure scenario") %>%
   t.test(first_superiority_estimate ~ first_condition, data = .) %>%
-  apa_print())$statistic %>%
+  apa_custom())$statistic %>%
   remove_dollar_signs()
 
 covid_psup_test <- (df.turkers %>%
   filter(medication_type == "COVID-19 scenario") %>%
   t.test(first_superiority_estimate ~ first_condition, data = .) %>%
-  apa_print())$statistic %>%
+  apa_custom())$statistic %>%
   remove_dollar_signs()
   
 # Extreme values
@@ -309,14 +309,14 @@ blood_extreme_test <- (df.turkers %>%
   filter(medication_type == "Blood pressure scenario") %>%
   mutate(extreme = first_superiority_estimate > 90) %>%
   t.test(extreme ~ first_condition, data=.) %>%
-  apa_print())$statistic %>%
+  apa_custom())$statistic %>%
   remove_dollar_signs()
 
 covid_extreme_test <- (df.turkers %>%
   filter(medication_type == "COVID-19 scenario") %>%
   mutate(extreme = first_superiority_estimate > 90) %>%
   t.test(extreme ~ first_condition, data=.) %>%
-  apa_print())$statistic %>%
+  apa_custom())$statistic %>%
   remove_dollar_signs()
 
 c(blood_psup_test, covid_psup_test, blood_extreme_test, covid_extreme_test)
